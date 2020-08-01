@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  graphQLUri: "https://coding-snips.herokuapp.com",
+  graphQLUri: "https://coding-snips-backend.herokuapp.com",
 };
