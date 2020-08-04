@@ -1,0 +1,17 @@
+<ng-container *ngIf="loading">Lade...</ng-container>
+<ng-container *ngIf="error">Error</ng-container>
+<form [formGroup]="formGroup">
+  <input
+    type="text"
+    name="email"
+    placeholder="Email"
+    formControlName="email"
+  /><br />
+  <input
+    type="password"
+    name="password"
+    placeholder="Password"
+    formControlName="password"
+  /><br />
+  <button type="submit" (click)="login()" [disabled]="loading">Login</button>
+</form>
