@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { Observable, pipe } from "rxjs";
 import { take, tap } from "rxjs/operators";
 import { ApolloQueryResult } from "apollo-client";
+import { Router } from "@angular/router";
 
 export const loginStorageKey = "cod-login-token";
 
@@ -17,7 +18,17 @@ interface ILoginData {
   providedIn: "root",
 })
 export class AuthService {
-  constructor(private apollo: Apollo) {}
+  constructor(private apollo: Apollo, private router: Router) {}
+
+  isLoggedIn(): boolean {
+    // Return true if token is stored, otherwise false
+    return !!localStorage.getItem(loginStorageKey);
+  }
+
+  logout(): void {
+    localStorage.removeItem(loginStorageKey);
+    this.router.navigate(["login"]);
+  }
 
   login(
     email: string,
@@ -40,7 +51,7 @@ export class AuthService {
         },
       })
       .valueChanges.pipe(
-        // take(1),
+        take(1),
         tap((val) => {
           if (val.data) {
             localStorage.setItem(loginStorageKey, val.data.login.token);

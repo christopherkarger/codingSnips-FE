@@ -1,1 +1,8 @@
-Snips
+<button (click)="showNewCodeListModal()">Create new Code List</button>
+<code-modal *ngIf="newCodeList">
+  <form [formGroup]="newCodeListForm">
+    <input type formControlName="codeListName" />
+    <button type="button" (click)="saveNewCodeList()">Speichern</button>
+    <button type="button" (click)="abortNewCodeList()">Abbrechen</button>
+  </form>
+</code-modal>
