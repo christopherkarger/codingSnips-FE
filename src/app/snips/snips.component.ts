@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -8,29 +8,30 @@ import {
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { AuthService } from "../services/auth.service";
-
-const createNewSnipsList = gql`
-  mutation createSnipsCollection($title: String!) {
-    createSnipsCollection(title: $title) {
-      title
-    }
-  }
-`;
+import { SnipsCollectionsService } from "../services/snips-collections.service";
 
 @Component({
   templateUrl: "./snips.component.html",
   styleUrls: ["./snips.component.scss"],
 })
-export class SnipsComponent {
+export class SnipsComponent implements OnInit {
   newCodeList = false;
   newCodeListForm: FormGroup;
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private apollo: Apollo
+    private snipsCollectionsService: SnipsCollectionsService
   ) {
     this.newCodeListForm = this.fb.group({
       codeListName: new FormControl("", [Validators.required]),
+    });
+  }
+
+  ngOnInit(): void {
+    this.snipsCollectionsService.getSnipsCollections().subscribe({
+      next: ({ data }) => {
+        console.log(data);
+      },
     });
   }
 
@@ -52,26 +53,17 @@ export class SnipsComponent {
   saveNewCodeList(): void {
     const listName = this.newCodeListForm.get("codeListName");
     if (listName) {
-      // save new List
-      console.log(listName.value);
-      this.apollo
-        .mutate({
-          mutation: createNewSnipsList,
-          variables: {
-            title: listName.value,
-          },
-        })
-        .subscribe(
-          ({ data }) => {
-            console.log("got data", data);
-          },
-          (error: Error) => {
-            // if (error.message.indexOf("Authentication failed") > -1) {
-            //   this.authService.logout();
-            // }
-            throw error;
-          }
-        );
+      this.snipsCollectionsService.saveNewCodeList(listName.value).subscribe({
+        next: ({ data }) => {
+          console.log(data);
+        },
+        error: (error: Error) => {
+          this.authService.checkError(error);
+          throw error;
+        },
+      });
+    } else {
+      throw new Error("codeListName not set");
     }
     this.hideNewCodeListModal();
     this.resetForm();

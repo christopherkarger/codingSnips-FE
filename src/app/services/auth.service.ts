@@ -20,6 +20,12 @@ interface ILoginData {
 export class AuthService {
   constructor(private apollo: Apollo, private router: Router) {}
 
+  checkError(error: Error): void {
+    if (error.message.indexOf("Authentication failed") > -1) {
+      this.logout();
+    }
+  }
+
   isLoggedIn(): boolean {
     // Return true if token is stored, otherwise false
     return !!localStorage.getItem(loginStorageKey);
