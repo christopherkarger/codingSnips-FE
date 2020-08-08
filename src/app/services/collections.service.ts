@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, pipe } from "rxjs";
-import { take, tap } from "rxjs/operators";
+import { take, tap, map } from "rxjs/operators";
 import { ApolloQueryResult } from "apollo-client";
 import { Router } from "@angular/router";
 import { FetchResult } from "apollo-link";
@@ -35,16 +35,18 @@ const createNewSnipsCollectionQuery = gql`
 @Injectable({
   providedIn: "root",
 })
-export class SnipsCollectionsService {
+export class CollectionsService {
   constructor(private apollo: Apollo, private router: Router) {}
 
-  getSnipsCollections(): Observable<FetchResult<any>> {
-    return this.apollo.watchQuery({
-      query: getSnipsCollectionsQuery,
-    }).valueChanges;
+  getAllCollections(): Observable<any> {
+    return this.apollo
+      .watchQuery({
+        query: getSnipsCollectionsQuery,
+      })
+      .valueChanges.pipe(map((result) => result.data));
   }
 
-  saveNewCodeList(
+  saveNewCollection(
     listName: string
   ): Observable<FetchResult<ICreateSnipsCollection>> {
     return this.apollo.mutate({

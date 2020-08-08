@@ -5,22 +5,26 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-import { Apollo } from "apollo-angular";
-import gql from "graphql-tag";
 import { AuthService } from "../services/auth.service";
-import { SnipsCollectionsService } from "../services/snips-collections.service";
+import { CollectionsService } from "../services/collections.service";
+import { FetchResult } from "apollo-link";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
+import { ApolloQueryResult } from "apollo-client";
 
 @Component({
-  templateUrl: "./snips.component.html",
-  styleUrls: ["./snips.component.scss"],
+  templateUrl: "./collections.component.html",
+  styleUrls: ["./collections.component.scss"],
 })
-export class SnipsComponent implements OnInit {
+export class CollectionsComponent implements OnInit {
   newCodeList = false;
   newCodeListForm: FormGroup;
+  allCollections$?: Observable<any>;
+
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private snipsCollectionsService: SnipsCollectionsService
+    private collectionsService: CollectionsService
   ) {
     this.newCodeListForm = this.fb.group({
       codeListName: new FormControl("", [Validators.required]),
@@ -28,11 +32,11 @@ export class SnipsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.snipsCollectionsService.getSnipsCollections().subscribe({
-      next: ({ data }) => {
-        console.log(data);
-      },
-    });
+    this.allCollections$ = this.collectionsService.getAllCollections().pipe(
+      tap((res) => {
+        console.log(res);
+      })
+    );
   }
 
   showNewCodeListModal(): void {
@@ -50,12 +54,14 @@ export class SnipsComponent implements OnInit {
     this.newCodeListForm.reset();
   }
 
-  saveNewCodeList(): void {
+  saveNewCollection(): void {
     const listName = this.newCodeListForm.get("codeListName");
     if (listName) {
-      this.snipsCollectionsService.saveNewCodeList(listName.value).subscribe({
+      this.collectionsService.saveNewCollection(listName.value).subscribe({
         next: ({ data }) => {
-          console.log(data);
+          if (data) {
+            console.log(data);
+          }
         },
         error: (error: Error) => {
           this.authService.checkError(error);

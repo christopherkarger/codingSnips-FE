@@ -45,7 +45,7 @@ export class LoginComponent {
       next: (res) => {
         this.loading = false;
         if (res.data) {
-          this.router.navigate(["snips"]);
+          this.router.navigate(["collections"]);
         }
       },
       error: (err) => {

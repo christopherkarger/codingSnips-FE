@@ -1,8 +1,14 @@
 <button (click)="showNewCodeListModal()">Create new Collection</button>
+<div *ngIf="allCollections$ | async as collections">
+  <div *ngFor="let item of collections.snipsCollections">
+    {{ item.title }}
+  </div>
+</div>
+
 <code-modal *ngIf="newCodeList">
   <form [formGroup]="newCodeListForm">
     <input type formControlName="codeListName" />
-    <button type="button" (click)="saveNewCodeList()">Speichern</button>
+    <button type="button" (click)="saveNewCollection()">Speichern</button>
     <button type="button" (click)="abortNewCodeList()">Abbrechen</button>
   </form>
 </code-modal>

@@ -6,13 +6,15 @@ const routes: Routes = [
   {
     path: "",
     pathMatch: "full",
-    redirectTo: "/snips",
+    redirectTo: "/collections",
   },
   {
-    path: "snips",
+    path: "collections",
     canActivate: [AuthguardService],
     loadChildren: () =>
-      import("./snips/snips.module").then((m) => m.SnipsModule),
+      import("./collections/collections.module").then(
+        (m) => m.CollectionsModule
+      ),
   },
 
   {
