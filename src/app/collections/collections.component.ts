@@ -20,7 +20,7 @@ import { tap } from "rxjs/operators";
 export class CollectionsComponent implements OnInit {
   newCodeList = false;
   newCodeListForm: FormGroup;
-  allCollections$?: Observable<SnipCollection[]>;
+  allCollections$?: Observable<SnipCollection[] | undefined>;
 
   constructor(
     private authService: AuthService,
@@ -33,11 +33,7 @@ export class CollectionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allCollections$ = this.collectionsService.getAllCollections().pipe(
-      tap((res) => {
-        console.log(res);
-      })
-    );
+    this.allCollections$ = this.collectionsService.getAllCollections();
   }
 
   showNewCodeListModal(): void {
@@ -58,17 +54,11 @@ export class CollectionsComponent implements OnInit {
   saveNewCollection(): void {
     const listName = this.newCodeListForm.get("codeListName");
     if (listName) {
-      this.collectionsService.saveNewCollection(listName.value).subscribe();
-      // .subscribe({
-      //   next: (res) => {
-      //     console.log(res);
-      //   },
-      //   error: (error: Error) => {
-      //     this.authService.checkError(error);
-      //     console.log("Could not save Collection");
-      //     throw error;
-      //   },
-      // });
+      this.collectionsService.saveNewCollection(listName.value).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+      });
     } else {
       throw new Error("codeListName not set");
     }
@@ -81,8 +71,7 @@ export class CollectionsComponent implements OnInit {
     this.resetForm();
   }
 
-  foo(): void {
-    
+  updateCollectionTitle(id: string): void {
+    this.collectionsService.updateCollection(id, "changed title").subscribe();
   }
-
 }

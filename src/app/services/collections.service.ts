@@ -1,23 +1,26 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { Observable, pipe } from "rxjs";
-import { take, tap, map } from "rxjs/operators";
-import { ApolloQueryResult } from "apollo-client";
+import { Observable, pipe, of, throwError } from "rxjs";
+import { take, tap, map, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { FetchResult } from "apollo-link";
+import { AuthService } from "./auth.service";
 
 export type SnipCollection = {
   _id: string;
   title: string;
 };
 
-export type Query = {
+type AllSnipsCollectionsQuery = {
   snipsCollections: SnipCollection[];
 };
 
-export type Mutation = {
-  createSnipCollection: SnipCollection;
+type UpdateSnipsCollectionNameQuery = {
+  updateSnipsCollectionName: SnipCollection;
+};
+
+type CreateSnipsCollectionMutation = {
+  createSnipsCollection: SnipCollection;
 };
 
 const getSnipsCollectionsQuery = gql`
@@ -29,68 +32,117 @@ const getSnipsCollectionsQuery = gql`
   }
 `;
 
-const createNewSnipsCollectionMutation = gql`
-  mutation createSnipsCollection($title: String!) {
-    createSnipsCollection(title: $title) {
-      _id
-      title
-    }
-  }
-`;
-
-const updateSnipsCollectionMutation = gql`
-  mutation updateSnipsCollectionName($collectionId: String!, $title: String!) {
-    updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
-      _id
-      title
-    }
-  }
-`;
-
 @Injectable({
   providedIn: "root",
 })
 export class CollectionsService {
-  constructor(private apollo: Apollo, private router: Router) {}
+  constructor(
+    private apollo: Apollo,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   getAllCollections(): Observable<SnipCollection[]> {
     return this.apollo
-      .watchQuery<Query>({
+      .watchQuery<AllSnipsCollectionsQuery>({
         query: getSnipsCollectionsQuery,
       })
-      .valueChanges.pipe(map((result) => result.data.snipsCollections));
+      .valueChanges.pipe(
+        map((result) => {
+          return result.data.snipsCollections;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
   }
 
-  updateCollection(collectionId: string, title: string): any {
-    return this.apollo.mutate({
-      mutation: updateSnipsCollectionMutation,
-      variables: {
-        collectionId,
-        title,
-      },
-    });
+  updateCollection(
+    collectionId: string,
+    title: string
+  ): Observable<SnipCollection | undefined> {
+    const updateSnipsCollectionMutation = gql`
+      mutation updateSnipsCollectionName(
+        $collectionId: String!
+        $title: String!
+      ) {
+        updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
+          _id
+          title
+        }
+      }
+    `;
+    return this.apollo
+      .mutate<UpdateSnipsCollectionNameQuery>({
+        mutation: updateSnipsCollectionMutation,
+        variables: {
+          collectionId,
+          title,
+        },
+      })
+      .pipe(
+        map((result) => {
+          return result.data?.updateSnipsCollectionName;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
   }
 
-  saveNewCollection(title: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: createNewSnipsCollectionMutation,
-      variables: {
-        title,
-      },
+  saveNewCollection(title: string): Observable<SnipCollection | undefined> {
+    const createNewSnipsCollectionMutation = gql`
+      mutation createSnipsCollection($title: String!) {
+        createSnipsCollection(title: $title) {
+          _id
+          title
+        }
+      }
+    `;
+    return this.apollo
+      .mutate<CreateSnipsCollectionMutation>({
+        mutation: createNewSnipsCollectionMutation,
+        variables: {
+          title,
+        },
 
-      // optimisticResponse: {
-      //   __typename: "Mutation",
-      //   createSnipsCollection: {
-      //     __typename: "SnipsCollection",
-      //     _id: Math.random().toString(36).substring(7),
-      //     title: listName,
-      //   },
-      // },
-    });
-    // .pipe(
-    //   map((result) => {
-    //     return result.data;
-    //   })
-    // );
+        // optimisticResponse: {
+        //   __typename: "Mutation",
+        //   createSnipsCollection: {
+        //     __typename: "SnipsCollection",
+        //     _id: Math.random().toString(36).substring(7),
+        //     title: listName,
+        //   },
+        // },
+      })
+      .pipe(
+        map((result) => {
+          if (result.data) {
+            const data = this.apollo.getClient().readQuery({
+              query: getSnipsCollectionsQuery,
+            });
+            const newCollection = {
+              _id: result.data.createSnipsCollection._id,
+              title,
+              __typename: "SnipsCollection",
+            };
+
+            this.apollo.getClient().writeQuery({
+              query: getSnipsCollectionsQuery,
+              data: {
+                snipsCollections: [...data.snipsCollections, newCollection],
+              },
+            });
+          }
+
+          return result.data?.createSnipsCollection;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
   }
 }
