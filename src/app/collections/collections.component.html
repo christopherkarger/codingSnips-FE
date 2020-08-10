@@ -1,9 +1,4 @@
 <button (click)="showNewCodeListModal()">Create new Collection</button>
-<div *ngIf="allCollections$ | async as collections">
-  <div *ngFor="let item of collections.snipsCollections">
-    {{ item.title }}
-  </div>
-</div>
 
 <code-modal *ngIf="newCodeList">
   <form [formGroup]="newCodeListForm">
@@ -12,3 +7,10 @@
     <button type="button" (click)="abortNewCodeList()">Abbrechen</button>
   </form>
 </code-modal>
+
+<div>
+  <div *ngFor="let item of allCollections$ | async">
+    {{ item.title }}
+    <button (click)="foo()">Click</button>
+  </div>
+</div>

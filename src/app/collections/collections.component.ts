@@ -6,11 +6,12 @@ import {
   Validators,
 } from "@angular/forms";
 import { AuthService } from "../services/auth.service";
-import { CollectionsService } from "../services/collections.service";
-import { FetchResult } from "apollo-link";
+import {
+  CollectionsService,
+  SnipCollection,
+} from "../services/collections.service";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
-import { ApolloQueryResult } from "apollo-client";
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -19,7 +20,7 @@ import { ApolloQueryResult } from "apollo-client";
 export class CollectionsComponent implements OnInit {
   newCodeList = false;
   newCodeListForm: FormGroup;
-  allCollections$?: Observable<any>;
+  allCollections$?: Observable<SnipCollection[]>;
 
   constructor(
     private authService: AuthService,
@@ -57,17 +58,17 @@ export class CollectionsComponent implements OnInit {
   saveNewCollection(): void {
     const listName = this.newCodeListForm.get("codeListName");
     if (listName) {
-      this.collectionsService.saveNewCollection(listName.value).subscribe({
-        next: ({ data }) => {
-          if (data) {
-            console.log(data);
-          }
-        },
-        error: (error: Error) => {
-          this.authService.checkError(error);
-          throw error;
-        },
-      });
+      this.collectionsService.saveNewCollection(listName.value).subscribe();
+      // .subscribe({
+      //   next: (res) => {
+      //     console.log(res);
+      //   },
+      //   error: (error: Error) => {
+      //     this.authService.checkError(error);
+      //     console.log("Could not save Collection");
+      //     throw error;
+      //   },
+      // });
     } else {
       throw new Error("codeListName not set");
     }
@@ -79,4 +80,9 @@ export class CollectionsComponent implements OnInit {
     this.hideNewCodeListModal();
     this.resetForm();
   }
+
+  foo(): void {
+    
+  }
+
 }
