@@ -10,7 +10,19 @@
   flex: 1;
 }
 .sidebar {
+  position: relative;
   background-color: $color1;
-  width: 70px;
+  width: 60px;
   height: 100vh;
+}
+
+.user {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  i {
+    font-size: 38px;
+  }
 }

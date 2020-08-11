@@ -2,7 +2,7 @@
   <div class="lists-sidebar__top">
     <h1>My Lists</h1>
 
-    <button class="add-list" (click)="showNewCodeListModal()">
+    <button title="Add list" class="add-list" (click)="showNewCodeListModal()">
       <i class="material-icons">
         add_circle
       </i>
@@ -16,10 +16,25 @@
   </ul>
 </div>
 
-<code-modal *ngIf="newCodeList">
-  <form [formGroup]="newCodeListForm">
-    <input type formControlName="codeListName" />
-    <button type="button" (click)="saveNewCollection()">Speichern</button>
-    <button type="button" (click)="abortNewCodeList()">Abbrechen</button>
-  </form>
+<code-modal *ngIf="newCodeList" (outsideClicked)="outsideModalClicked()">
+  <div class="new-list">
+    <h1>Create new List</h1>
+    <form [formGroup]="newCodeListForm">
+      <h2>Name:</h2>
+      <input
+        class="new-list__name"
+        placeholder="JavaScript"
+        type
+        formControlName="codeListName"
+      />
+      <div class="new-list__button-actions">
+        <button class="action" type="submit" (click)="saveNewCollection()">
+          Speichern
+        </button>
+        <button class="abort" type="button" (click)="abortNewCodeList()">
+          Abbrechen
+        </button>
+      </div>
+    </form>
+  </div>
 </code-modal>

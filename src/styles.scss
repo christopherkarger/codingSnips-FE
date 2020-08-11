@@ -12,6 +12,7 @@ html {
 
 body {
   font-family: $mainFont;
+  color: $textColor;
 }
 
 button {
@@ -22,6 +23,33 @@ button {
   &:focus {
     outline: 0;
     border: 0;
+  }
+
+  &.action {
+    background-color: $mainColor;
+    color: #fff;
+    border-radius: 3px;
+    &:hover {
+      background-color: $color1;
+    }
+  }
+  &.abort {
+    &:hover {
+      color: $color1;
+    }
+  }
+
+  &.action,
+  &.abort {
+    padding: 11px;
+  }
+}
+
+input {
+  padding: 5px 8px;
+  &:focus {
+    border: 0;
+    outline: 0;
   }
 }
 

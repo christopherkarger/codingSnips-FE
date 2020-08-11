@@ -1,3 +1,5 @@
-<div>
-  <ng-content></ng-content>
+<div class="code-modal" (click)="emitOutsideClick($event)">
+  <div class="code-modal__inner">
+    <ng-content></ng-content>
+  </div>
 </div>

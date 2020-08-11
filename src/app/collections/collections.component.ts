@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -42,6 +42,10 @@ export class CollectionsComponent implements OnInit {
 
   hideNewCodeListModal(): void {
     this.newCodeList = false;
+  }
+
+  outsideModalClicked(): void {
+    this.hideNewCodeListModal();
   }
 
   resetForm(): void {

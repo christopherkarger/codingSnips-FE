@@ -1,0 +1,19 @@
+.code-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  &__inner {
+    background: #fff;
+    width: 400px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    border-radius: 5px;
+    box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.2);
+  }
+}
