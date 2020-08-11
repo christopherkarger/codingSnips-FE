@@ -1,2 +1,8 @@
-<button type="button" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
-<router-outlet></router-outlet>
+<div class="app-wrapper">
+  <div class="sidebar">
+    <button type="button" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
+  </div>
+  <div class="main-view">
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./variables.scss";
+@import "./normalize.scss";
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  font-family: $mainFont;
+}
+
+button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  &:focus {
+    outline: 0;
+    border: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+}

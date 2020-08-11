@@ -1,0 +1,16 @@
+@import "../variables.scss";
+
+.app-wrapper {
+  position: relative;
+  height: 100vh;
+  display: flex;
+}
+.main-view {
+  display: flex;
+  flex: 1;
+}
+.sidebar {
+  background-color: $color1;
+  width: 70px;
+  height: 100vh;
+}
