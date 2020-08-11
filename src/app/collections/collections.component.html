@@ -1,5 +1,5 @@
-<div class="lists-sidebar">
-  <div class="lists-sidebar__top">
+<div class="collections-sidebar">
+  <div class="collections-sidebar__top">
     <h1>My Lists</h1>
 
     <button title="Add list" class="add-list" (click)="showNewCodeListModal()">
@@ -8,30 +8,36 @@
       </i>
     </button>
   </div>
-  <ul class="lists-sidebar__items">
-    <li *ngFor="let item of allCollections$ | async">
+  <ul class="collections-sidebar__items">
+    <li
+      *ngFor="let item of allCollections$ | async"
+      (click)="openCollection(item)"
+    >
       {{ item.title }}
       <!--   <button (click)="updateCollectionTitle(item._id)">Click</button> -->
     </li>
   </ul>
 </div>
+<div class="collection-detail">
+  <router-outlet></router-outlet>
+</div>
 
 <code-modal *ngIf="newCodeList" (outsideClicked)="outsideModalClicked()">
-  <div class="new-list">
+  <div class="new-collection">
     <h1>Create new List</h1>
     <form [formGroup]="newCodeListForm">
       <h2>Name:</h2>
       <input
-        class="new-list__name"
+        class="new-collection__name"
         placeholder="JavaScript"
         type
         formControlName="codeListName"
       />
-      <div class="new-list__button-actions">
+      <div class="new-collection__button-actions">
         <button class="action" type="submit" (click)="saveNewCollection()">
           Speichern
         </button>
-        <button class="abort" type="button" (click)="abortNewCodeList()">
+        <button class="abort" type="button" (click)="abortNewCollection()">
           Abbrechen
         </button>
       </div>

@@ -9,6 +9,15 @@ const routes: Routes = [
   {
     path: "",
     component: CollectionsComponent,
+    children: [
+      {
+        path: ":id",
+        loadChildren: () =>
+          import("../collection-details/collection-details.module").then(
+            (m) => m.CollectionDetailsModule
+          ),
+      },
+    ],
   },
 ];
 

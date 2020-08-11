@@ -5,13 +5,13 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-import { AuthService } from "../services/auth.service";
 import {
   CollectionsService,
   SnipCollection,
 } from "../services/collections.service";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -23,7 +23,7 @@ export class CollectionsComponent implements OnInit {
   allCollections$?: Observable<SnipCollection[] | undefined>;
 
   constructor(
-    private authService: AuthService,
+    private router: Router,
     private fb: FormBuilder,
     private collectionsService: CollectionsService
   ) {
@@ -70,12 +70,16 @@ export class CollectionsComponent implements OnInit {
     this.resetForm();
   }
 
-  abortNewCodeList(): void {
+  abortNewCollection(): void {
     this.hideNewCodeListModal();
     this.resetForm();
   }
 
   updateCollectionTitle(id: string): void {
     this.collectionsService.updateCollection(id, "changed title").subscribe();
+  }
+
+  openCollection(collection: SnipCollection): void {
+    this.router.navigate(["/collections", collection._id]);
   }
 }
