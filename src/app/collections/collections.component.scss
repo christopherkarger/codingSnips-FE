@@ -16,10 +16,13 @@
     margin: 0;
   }
   &__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    position: relative;
     margin-bottom: 20px;
+    .add-list {
+      position: absolute;
+      top: -3px;
+      right: 0;
+    }
   }
 
   &__items {
@@ -59,11 +62,4 @@
   &__button-actions {
     display: flex;
   }
-}
-
-.collection-detail {
-  height: 100vh;
-  width: 400px;
-  overflow: auto;
-  border-right: 1px solid $color2;
 }

@@ -21,6 +21,8 @@ export class CollectionsComponent implements OnInit {
   newCodeList = false;
   newCodeListForm: FormGroup;
   allCollections$?: Observable<SnipCollection[] | undefined>;
+  loading?: boolean;
+  error?: boolean;
 
   constructor(
     private router: Router,
@@ -33,7 +35,15 @@ export class CollectionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allCollections$ = this.collectionsService.getAllCollections();
+    this.loading = true;
+    this.allCollections$ = this.collectionsService.getAllCollections().pipe(
+      tap((res) => {
+        this.loading = false;
+        if (res[0]) {
+          this.router.navigate(["/collections", res[0]._id]);
+        }
+      })
+    );
   }
 
   showNewCodeListModal(): void {

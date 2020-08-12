@@ -2,12 +2,20 @@
   <div class="collections-sidebar__top">
     <h1>My Lists</h1>
 
-    <button title="Add list" class="add-list" (click)="showNewCodeListModal()">
+    <button
+      *ngIf="!loading"
+      title="Add list"
+      class="add-list"
+      (click)="showNewCodeListModal()"
+    >
       <i class="material-icons">
         add_circle
       </i>
     </button>
   </div>
+
+  <loading [loading]="loading" [white]="true"></loading>
+
   <ul class="collections-sidebar__items">
     <li
       *ngFor="let item of allCollections$ | async"
@@ -18,9 +26,8 @@
     </li>
   </ul>
 </div>
-<div class="collection-detail">
-  <router-outlet></router-outlet>
-</div>
+
+<router-outlet></router-outlet>
 
 <code-modal *ngIf="newCodeList" (outsideClicked)="outsideModalClicked()">
   <div class="new-collection">

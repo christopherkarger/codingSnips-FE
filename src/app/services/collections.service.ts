@@ -36,6 +36,16 @@ const getSnipsCollectionsQuery = gql`
   providedIn: "root",
 })
 export class CollectionsService {
+  private _collectionsLoaded = false;
+
+  set collectionsLoaded(val: boolean) {
+    this._collectionsLoaded = val;
+  }
+
+  get collectionsLoaded(): boolean {
+    return this._collectionsLoaded;
+  }
+
   constructor(
     private apollo: Apollo,
     private router: Router,
@@ -49,6 +59,7 @@ export class CollectionsService {
       })
       .valueChanges.pipe(
         map((result) => {
+          this.collectionsLoaded = true;
           return result.data.snipsCollections;
         }),
         catchError((error) => {
