@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { CollectionsComponent } from "./collections.component";
 import { LoadingComponent } from "../components/loading/loading.component";
 import { ModalComponent } from "../components/modal/modal.component";
+import { ErrorComponent } from "../components/error/error.component";
 import { RouterModule, Routes } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ChildRoutesGuardService } from "../services/child-routes-guard.service";
@@ -25,7 +26,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CollectionsComponent, ModalComponent, LoadingComponent],
+  declarations: [
+    CollectionsComponent,
+    ModalComponent,
+    LoadingComponent,
+    ErrorComponent,
+  ],
   imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)],
   exports: [],
   providers: [],

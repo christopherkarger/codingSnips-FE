@@ -9,6 +9,11 @@ import { AuthService } from "./auth.service";
 export type SnipCollection = {
   _id: string;
   title: string;
+  snips: any[];
+};
+
+type SnipsCollectionQuery = {
+  snipsCollection: SnipCollection;
 };
 
 type AllSnipsCollectionsQuery = {
@@ -22,6 +27,36 @@ type UpdateSnipsCollectionNameQuery = {
 type CreateSnipsCollectionMutation = {
   createSnipsCollection: SnipCollection;
 };
+
+const createNewSnipsCollectionMutation = gql`
+  mutation createSnipsCollection($title: String!) {
+    createSnipsCollection(title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
+const updateSnipsCollectionMutation = gql`
+  mutation updateSnipsCollectionName($collectionId: String!, $title: String!) {
+    updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
+const getSnipsCollectionQuery = gql`
+  query snipsCollection($collectionId: String!) {
+    snipsCollection(collectionId: $collectionId) {
+      _id
+      title
+      snips {
+        title
+      }
+    }
+  }
+`;
 
 const getSnipsCollectionsQuery = gql`
   query allSnipsCollections {
@@ -52,6 +87,26 @@ export class CollectionsService {
     private authService: AuthService
   ) {}
 
+  getCollectionDetails(collectionId: string): Observable<SnipCollection> {
+    return this.apollo
+      .watchQuery<SnipsCollectionQuery>({
+        query: getSnipsCollectionQuery,
+        variables: {
+          collectionId,
+        },
+      })
+      .valueChanges.pipe(
+        map((result) => {
+          console.log(result);
+          return result.data.snipsCollection;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
+  }
+
   getAllCollections(): Observable<SnipCollection[]> {
     return this.apollo
       .watchQuery<AllSnipsCollectionsQuery>({
@@ -73,17 +128,6 @@ export class CollectionsService {
     collectionId: string,
     title: string
   ): Observable<SnipCollection | undefined> {
-    const updateSnipsCollectionMutation = gql`
-      mutation updateSnipsCollectionName(
-        $collectionId: String!
-        $title: String!
-      ) {
-        updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
-          _id
-          title
-        }
-      }
-    `;
     return this.apollo
       .mutate<UpdateSnipsCollectionNameQuery>({
         mutation: updateSnipsCollectionMutation,
@@ -104,14 +148,6 @@ export class CollectionsService {
   }
 
   saveNewCollection(title: string): Observable<SnipCollection | undefined> {
-    const createNewSnipsCollectionMutation = gql`
-      mutation createSnipsCollection($title: String!) {
-        createSnipsCollection(title: $title) {
-          _id
-          title
-        }
-      }
-    `;
     return this.apollo
       .mutate<CreateSnipsCollectionMutation>({
         mutation: createNewSnipsCollectionMutation,

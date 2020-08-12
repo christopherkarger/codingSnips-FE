@@ -9,8 +9,8 @@ import {
   CollectionsService,
   SnipCollection,
 } from "../services/collections.service";
-import { Observable } from "rxjs";
-import { tap } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { tap, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 
 @Component({
@@ -39,9 +39,15 @@ export class CollectionsComponent implements OnInit {
     this.allCollections$ = this.collectionsService.getAllCollections().pipe(
       tap((res) => {
         this.loading = false;
+        this.error = false;
         if (res[0]) {
           this.router.navigate(["/collections", res[0]._id]);
         }
+      }),
+      catchError((err) => {
+        this.error = true;
+        this.loading = false;
+        return throwError(err);
       })
     );
   }

@@ -14,7 +14,12 @@
     </button>
   </div>
 
-  <loading [loading]="loading" [white]="true"></loading>
+  <error
+    [error]="error"
+    msg="A problem occured while loading your lists"
+  ></error>
+
+  <loading [loading]="loading && !error" [white]="true"></loading>
 
   <ul class="collections-sidebar__items">
     <li
