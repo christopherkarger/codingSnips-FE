@@ -34,7 +34,7 @@
 
 <router-outlet></router-outlet>
 
-<code-modal *ngIf="newCodeList" (outsideClicked)="outsideModalClicked()">
+<code-modal [visible]="newCodeList" (outsideClicked)="outsideModalClicked()">
   <div class="new-collection">
     <h1>Create new List</h1>
     <form [formGroup]="newCodeListForm">

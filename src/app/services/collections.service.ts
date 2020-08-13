@@ -9,7 +9,7 @@ import { AuthService } from "./auth.service";
 export type SnipCollection = {
   _id: string;
   title: string;
-  snips: any[];
+  snips?: any[];
 };
 
 type SnipsCollectionQuery = {

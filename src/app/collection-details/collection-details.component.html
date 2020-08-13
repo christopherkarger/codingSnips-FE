@@ -1,3 +1,12 @@
 <div class="collection-detail" *ngIf="collection$ | async as collection">
-  {{ collection.title }}
+  <div class="collection-detail__header">
+    <h2>
+      {{ collection.title }}
+    </h2>
+    <div class="collection-detail__actions">
+      <button (click)="editCollection(collection)">
+        <i class="material-icons">edit</i>
+      </button>
+    </div>
+  </div>
 </div>

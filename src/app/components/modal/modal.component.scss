@@ -3,17 +3,41 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  &__inner {
-    background: #fff;
-    width: 400px;
-    padding: 20px;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+
+  &__inner-wrapper {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+    z-index: 1000;
+  }
+  &__inner {
+    background: #fff;
+    width: 400px;
+    padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.2);
+  }
+  &__bg {
+    z-index: 999;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease;
+  }
+}
+
+.code-modal.visible {
+  opacity: 1;
+  pointer-events: auto;
+  .code-modal__bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
   }
 }

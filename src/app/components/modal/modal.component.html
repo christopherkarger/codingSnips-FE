@@ -1,5 +1,12 @@
-<div class="code-modal" (click)="emitOutsideClick($event)">
-  <div class="code-modal__inner">
-    <ng-content></ng-content>
+<div class="code-modal" [class.visible]="visible">
+  <div class="code-modal__inner-wrapper">
+    <div
+      class="code-modal__inner"
+      [@openCloseModal]="visible ? 'open' : 'closed'"
+    >
+      <ng-content></ng-content>
+    </div>
   </div>
+
+  <div class="code-modal__bg" (click)="emitOutsideClick($event)"></div>
 </div>

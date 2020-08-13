@@ -16,12 +16,14 @@
     margin: 0;
   }
   &__top {
+    display: flex;
     position: relative;
     margin-bottom: 20px;
     .add-list {
-      position: absolute;
-      top: -3px;
-      right: 0;
+      margin-left: auto;
+      &:hover {
+        color: $textColor;
+      }
     }
   }
 

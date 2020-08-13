@@ -25,4 +25,6 @@ export class CollectionDetailsComponent implements OnInit {
       );
     });
   }
+
+  editCollection(collection: SnipCollection): void {}
 }
