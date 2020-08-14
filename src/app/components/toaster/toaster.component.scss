@@ -1,0 +1,10 @@
+@import "../../../variables.scss";
+
+.toaster {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: $color4;
+  color: #fff;
+  padding: 20px;
+}

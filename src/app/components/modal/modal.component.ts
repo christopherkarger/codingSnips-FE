@@ -5,7 +5,6 @@ import {
   style,
   animate,
   transition,
-  // ...
 } from "@angular/animations";
 
 @Component({
@@ -26,8 +25,8 @@ import {
           transform: "translateY(300px)",
         })
       ),
-      transition("open => closed", [animate("0.2s")]),
-      transition("closed => open", [animate("0.2s")]),
+      transition("open => closed", [animate("0.2s ease-out")]),
+      transition("closed => open", [animate("0.2s ease-out")]),
     ]),
   ],
 })

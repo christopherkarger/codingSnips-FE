@@ -13,6 +13,7 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 })
 export class CollectionDetailsComponent implements OnInit {
   deleteCollectionView = false;
+  collectionUpdateError = false;
 
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
@@ -45,7 +46,7 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
   outsideModalClicked(): void {
-    this.abortEditCollection();
+    this.hideAndResetModal();
   }
 
   editCollection(collection: SnipCollection): void {
@@ -65,14 +66,21 @@ export class CollectionDetailsComponent implements OnInit {
     if (input) {
       this.collectionsService
         .updateCollection(collection._id, input.value)
-        .subscribe();
+        .subscribe({
+          next: () => {
+            this.collectionUpdateError = false;
+          },
+          error: () => {
+            this.collectionUpdateError = true;
+          },
+        });
       this.hideModal();
     }
   }
 
-  abortEditCollection(): void {
+  hideAndResetModal(): void {
     this.hideModal();
-    this.abortDeleteCollection();
+    this.resetDeleteCollection();
   }
 
   showDeleteCollectionView(): void {
@@ -80,10 +88,17 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
   deleteCollection(collection: SnipCollection): void {
-    console.log(collection);
+    this.collectionService.deleteCollection(collection).subscribe({
+      next: () => {
+        this.hideAndResetModal();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
-  abortDeleteCollection(): void {
+  resetDeleteCollection(): void {
     this.deleteCollectionView = false;
   }
 }

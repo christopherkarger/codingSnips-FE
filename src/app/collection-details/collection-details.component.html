@@ -28,7 +28,7 @@
           <button
             class="no-highlight"
             type="button"
-            (click)="abortEditCollection()"
+            (click)="hideAndResetModal()"
           >
             Abort
           </button>
@@ -45,14 +45,15 @@
         <button class="no-highlight" (click)="deleteCollection(collection)">
           Yes Delete!
         </button>
-        <button
-          class="highlight"
-          type="button"
-          (click)="abortDeleteCollection()"
-        >
+        <button class="highlight" type="button" (click)="hideAndResetModal()">
           Abort
         </button>
       </div>
     </ng-container>
   </code-modal>
 </div>
+
+<toaster
+  [(visible)]="collectionUpdateError"
+  msg="Could not rename your collection! Please try again later."
+></toaster>

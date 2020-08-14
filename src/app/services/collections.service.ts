@@ -12,43 +12,13 @@ export type SnipCollection = {
   snips?: any[];
 };
 
-type SnipsCollectionQuery = {
-  snipsCollection: SnipCollection;
+type SnipsCollectionByIdQuery = {
+  snipsCollectionById: SnipCollection;
 };
 
-type AllSnipsCollectionsQuery = {
-  snipsCollections: SnipCollection[];
-};
-
-type UpdateSnipsCollectionNameQuery = {
-  updateSnipsCollectionName: SnipCollection;
-};
-
-type CreateSnipsCollectionMutation = {
-  createSnipsCollection: SnipCollection;
-};
-
-const createNewSnipsCollectionMutation = gql`
-  mutation createSnipsCollection($title: String!) {
-    createSnipsCollection(title: $title) {
-      _id
-      title
-    }
-  }
-`;
-
-const updateSnipsCollectionMutation = gql`
-  mutation updateSnipsCollectionName($collectionId: String!, $title: String!) {
-    updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
-      _id
-      title
-    }
-  }
-`;
-
-const getSnipsCollectionQuery = gql`
-  query snipsCollection($collectionId: String!) {
-    snipsCollection(collectionId: $collectionId) {
+const snipsCollectionByIdQuery = gql`
+  query snipsCollectionById($collectionId: String!) {
+    snipsCollectionById(collectionId: $collectionId) {
       _id
       title
       snips {
@@ -58,9 +28,52 @@ const getSnipsCollectionQuery = gql`
   }
 `;
 
-const getSnipsCollectionsQuery = gql`
+type AllSnipsCollectionsQuery = {
+  snipsCollections: SnipCollection[];
+};
+
+const allSnipsCollectionsQuery = gql`
   query allSnipsCollections {
     snipsCollections {
+      _id
+      title
+    }
+  }
+`;
+
+type UpdateSnipsCollectionNameMutation = {
+  updateSnipsCollectionName: SnipCollection;
+};
+
+const updateSnipsCollectionNameMutation = gql`
+  mutation updateSnipsCollectionName($collectionId: String!, $title: String!) {
+    updateSnipsCollectionName(collectionId: $collectionId, title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
+type CreateSnipsCollectionMutation = {
+  createSnipsCollection: SnipCollection;
+};
+
+const createSnipsCollectionMutation = gql`
+  mutation createSnipsCollection($title: String!) {
+    createSnipsCollection(title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
+type DeleteSnipsCollectionMutation = {
+  deleteSnipsCollection: SnipCollection;
+};
+
+const deleteSnipsCollectionMutation = gql`
+  mutation deleteSnipsCollection($collectionId: String!) {
+    deleteSnipsCollection(collectionId: $collectionId) {
       _id
       title
     }
@@ -89,8 +102,8 @@ export class CollectionsService {
 
   getCollectionDetails(collectionId: string): Observable<SnipCollection> {
     return this.apollo
-      .watchQuery<SnipsCollectionQuery>({
-        query: getSnipsCollectionQuery,
+      .watchQuery<SnipsCollectionByIdQuery>({
+        query: snipsCollectionByIdQuery,
         variables: {
           collectionId,
         },
@@ -98,7 +111,7 @@ export class CollectionsService {
       .valueChanges.pipe(
         map((result) => {
           console.log(result);
-          return result.data.snipsCollection;
+          return result.data.snipsCollectionById;
         }),
         catchError((error) => {
           this.authService.checkError(error);
@@ -110,7 +123,7 @@ export class CollectionsService {
   getAllCollections(): Observable<SnipCollection[]> {
     return this.apollo
       .watchQuery<AllSnipsCollectionsQuery>({
-        query: getSnipsCollectionsQuery,
+        query: allSnipsCollectionsQuery,
       })
       .valueChanges.pipe(
         map((result) => {
@@ -129,8 +142,8 @@ export class CollectionsService {
     title: string
   ): Observable<SnipCollection | undefined> {
     return this.apollo
-      .mutate<UpdateSnipsCollectionNameQuery>({
-        mutation: updateSnipsCollectionMutation,
+      .mutate<UpdateSnipsCollectionNameMutation>({
+        mutation: updateSnipsCollectionNameMutation,
         variables: {
           collectionId,
           title,
@@ -150,7 +163,7 @@ export class CollectionsService {
   saveNewCollection(title: string): Observable<SnipCollection | undefined> {
     return this.apollo
       .mutate<CreateSnipsCollectionMutation>({
-        mutation: createNewSnipsCollectionMutation,
+        mutation: createSnipsCollectionMutation,
         variables: {
           title,
         },
@@ -168,7 +181,7 @@ export class CollectionsService {
         map((result) => {
           if (result.data) {
             const data = this.apollo.getClient().readQuery({
-              query: getSnipsCollectionsQuery,
+              query: allSnipsCollectionsQuery,
             });
             const newCollection = {
               _id: result.data.createSnipsCollection._id,
@@ -177,7 +190,7 @@ export class CollectionsService {
             };
 
             this.apollo.getClient().writeQuery({
-              query: getSnipsCollectionsQuery,
+              query: allSnipsCollectionsQuery,
               data: {
                 snipsCollections: [...data.snipsCollections, newCollection],
               },
@@ -185,6 +198,48 @@ export class CollectionsService {
           }
 
           return result.data?.createSnipsCollection;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
+  }
+
+  deleteCollection(
+    collection: SnipCollection
+  ): Observable<SnipCollection | undefined> {
+    return this.apollo
+      .mutate<DeleteSnipsCollectionMutation>({
+        mutation: deleteSnipsCollectionMutation,
+        variables: {
+          collectionId: collection._id,
+        },
+      })
+      .pipe(
+        map((result) => {
+          if (result.data) {
+            const data = this.apollo.getClient().readQuery({
+              query: allSnipsCollectionsQuery,
+            });
+
+            const newData = data.snipsCollections.filter(
+              (col: SnipCollection) => col._id !== collection._id
+            );
+
+            if (newData.length === 0) {
+              this.router.navigate(["/collections"]);
+            }
+
+            this.apollo.getClient().writeQuery({
+              query: allSnipsCollectionsQuery,
+              data: {
+                snipsCollections: [...newData],
+              },
+            });
+          }
+
+          return result.data?.deleteSnipsCollection;
         }),
         catchError((error) => {
           this.authService.checkError(error);

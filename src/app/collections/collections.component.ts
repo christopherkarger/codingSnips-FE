@@ -28,6 +28,7 @@ export class CollectionsComponent implements OnInit {
   collectionNameInput?: ElementRef;
 
   modalVisible = false;
+  collectionAddError = false;
   newCodeListForm: FormGroup;
   allCollections$?: Observable<SnipCollection[] | undefined>;
   loading?: boolean;
@@ -87,8 +88,11 @@ export class CollectionsComponent implements OnInit {
     const input = this.newCodeListForm.get("collectionName");
     if (input) {
       this.collectionsService.saveNewCollection(input.value).subscribe({
-        next: (res) => {
-          console.log(res);
+        next: () => {
+          this.collectionAddError = false;
+        },
+        error: () => {
+          this.collectionAddError = true;
         },
       });
     } else {

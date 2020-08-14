@@ -1,6 +1,6 @@
 <div class="collections-sidebar">
   <div class="collections-sidebar__top">
-    <h1>My Lists</h1>
+    <h1>My Collections</h1>
 
     <button
       *ngIf="!loading"
@@ -35,7 +35,7 @@
 <router-outlet></router-outlet>
 
 <code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">
-  <h1>Create new List</h1>
+  <h1>Create new Collection</h1>
   <form [formGroup]="newCodeListForm">
     <h2>Name:</h2>
     <input
@@ -55,3 +55,8 @@
     </div>
   </form>
 </code-modal>
+
+<toaster
+  [(visible)]="collectionAddError"
+  msg="Could not save your collection! Please try again later."
+></toaster>
