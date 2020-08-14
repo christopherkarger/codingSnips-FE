@@ -6,7 +6,7 @@
       *ngIf="!loading"
       title="Add list"
       class="add-list"
-      (click)="showNewCodeListModal()"
+      (click)="showModal()"
     >
       <i class="material-icons">
         add_circle
@@ -34,25 +34,24 @@
 
 <router-outlet></router-outlet>
 
-<code-modal [visible]="newCodeList" (outsideClicked)="outsideModalClicked()">
-  <div class="new-collection">
-    <h1>Create new List</h1>
-    <form [formGroup]="newCodeListForm">
-      <h2>Name:</h2>
-      <input
-        class="new-collection__name"
-        placeholder="JavaScript"
-        type
-        formControlName="codeListName"
-      />
-      <div class="new-collection__button-actions">
-        <button class="action" type="submit" (click)="saveNewCollection()">
-          Speichern
-        </button>
-        <button class="abort" type="button" (click)="abortNewCollection()">
-          Abbrechen
-        </button>
-      </div>
-    </form>
-  </div>
+<code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">
+  <h1>Create new List</h1>
+  <form [formGroup]="newCodeListForm">
+    <h2>Name:</h2>
+    <input
+      class="code-modal__text"
+      placeholder="JavaScript"
+      type
+      formControlName="collectionName"
+      #collectionNameInput
+    />
+    <div class="code-modal__button-actions">
+      <button class="highlight" type="submit" (click)="saveNewCollection()">
+        Save
+      </button>
+      <button class="no-highlight" type="button" (click)="abortNewCollection()">
+        Abort
+      </button>
+    </div>
+  </form>
 </code-modal>

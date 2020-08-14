@@ -1,3 +1,5 @@
+@import "../../../variables.scss";
+
 .code-modal {
   position: fixed;
   top: 0;
@@ -6,6 +8,33 @@
   height: 100vh;
   pointer-events: none;
   opacity: 0;
+
+  ::ng-deep {
+    h1 {
+      color: $mainColor;
+      font-size: 22px;
+    }
+
+    h2 {
+      font-weight: normal;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .code-modal__text {
+      display: block;
+      width: 100%;
+      height: 40px;
+      border: 1px solid $color2;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .code-modal__button-actions {
+      display: flex;
+    }
+  }
 
   &__inner-wrapper {
     position: absolute;

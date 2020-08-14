@@ -1,4 +1,10 @@
-import { Component, OnInit, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +24,10 @@ import { Router } from "@angular/router";
   styleUrls: ["./collections.component.scss"],
 })
 export class CollectionsComponent implements OnInit {
-  newCodeList = false;
+  @ViewChild("collectionNameInput")
+  collectionNameInput?: ElementRef;
+
+  modalVisible = false;
   newCodeListForm: FormGroup;
   allCollections$?: Observable<SnipCollection[] | undefined>;
   loading?: boolean;
@@ -30,7 +39,7 @@ export class CollectionsComponent implements OnInit {
     private collectionsService: CollectionsService
   ) {
     this.newCodeListForm = this.fb.group({
-      codeListName: new FormControl("", [Validators.required]),
+      collectionName: new FormControl("", [Validators.required]),
     });
   }
 
@@ -52,29 +61,32 @@ export class CollectionsComponent implements OnInit {
     );
   }
 
-  showNewCodeListModal(): void {
-    this.newCodeList = true;
+  showModal(): void {
+    if (this.collectionNameInput) {
+      this.collectionNameInput.nativeElement.focus();
+    }
+    this.modalVisible = true;
   }
 
-  hideNewCodeListModal(): void {
-    this.newCodeList = false;
+  hideModal(): void {
+    this.modalVisible = false;
   }
 
   outsideModalClicked(): void {
-    this.hideNewCodeListModal();
+    this.hideModal();
   }
 
   resetForm(): void {
     this.newCodeListForm.patchValue({
-      codeListName: new FormControl("", [Validators.required]),
+      collectionName: new FormControl("", [Validators.required]),
     });
     this.newCodeListForm.reset();
   }
 
   saveNewCollection(): void {
-    const listName = this.newCodeListForm.get("codeListName");
-    if (listName) {
-      this.collectionsService.saveNewCollection(listName.value).subscribe({
+    const input = this.newCodeListForm.get("collectionName");
+    if (input) {
+      this.collectionsService.saveNewCollection(input.value).subscribe({
         next: (res) => {
           console.log(res);
         },
@@ -82,12 +94,12 @@ export class CollectionsComponent implements OnInit {
     } else {
       throw new Error("codeListName not set");
     }
-    this.hideNewCodeListModal();
+    this.hideModal();
     this.resetForm();
   }
 
   abortNewCollection(): void {
-    this.hideNewCodeListModal();
+    this.hideModal();
     this.resetForm();
   }
 

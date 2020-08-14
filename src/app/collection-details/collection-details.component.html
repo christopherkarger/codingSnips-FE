@@ -9,4 +9,50 @@
       </button>
     </div>
   </div>
+  <code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">
+    <ng-container *ngIf="!deleteCollectionView">
+      <form [formGroup]="editCollectionForm">
+        <input
+          class="code-modal__text"
+          formControlName="collectionName"
+          #collectionNameInput
+        />
+        <div class="code-modal__button-actions">
+          <button
+            class="highlight"
+            type="submit"
+            (click)="saveEditCollection(collection)"
+          >
+            Save
+          </button>
+          <button
+            class="no-highlight"
+            type="button"
+            (click)="abortEditCollection()"
+          >
+            Abort
+          </button>
+        </div>
+      </form>
+      <div class="collection-detail__delete-collection">
+        <button (click)="showDeleteCollectionView()">Delete Collection</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="deleteCollectionView">
+      <h3 class="warn">Do you really want to delete this collection?</h3>
+      <div class="code-modal__button-actions">
+        <button class="no-highlight" (click)="deleteCollection(collection)">
+          Yes Delete!
+        </button>
+        <button
+          class="highlight"
+          type="button"
+          (click)="abortDeleteCollection()"
+        >
+          Abort
+        </button>
+      </div>
+    </ng-container>
+  </code-modal>
 </div>
