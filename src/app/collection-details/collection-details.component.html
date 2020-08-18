@@ -7,6 +7,9 @@
       <button (click)="editCollection(collection)">
         <i class="material-icons">edit</i>
       </button>
+      <button (click)="addSnip(collection)" class="collection-detail__add-snip">
+        <i class="material-icons">add_circle</i>
+      </button>
     </div>
   </div>
   <code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">

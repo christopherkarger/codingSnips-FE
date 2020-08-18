@@ -4,6 +4,7 @@ import {
   CollectionsService,
   SnipCollection,
 } from "../services/collections.service";
+import { SnipsService } from "../services/snips.service";
 import { Observable } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
@@ -26,7 +27,8 @@ export class CollectionDetailsComponent implements OnInit {
     private activeRoute: ActivatedRoute,
     private collectionService: CollectionsService,
     private fb: FormBuilder,
-    private collectionsService: CollectionsService
+    private collectionsService: CollectionsService,
+    private snipsService: SnipsService
   ) {
     this.editCollectionForm = this.fb.group({
       collectionName: new FormControl(""),
@@ -100,5 +102,16 @@ export class CollectionDetailsComponent implements OnInit {
 
   resetDeleteCollection(): void {
     this.deleteCollectionView = false;
+  }
+
+  addSnip(collection: SnipCollection): void {
+    this.snipsService.addSnip(collection._id, "Hallo", "snips").subscribe({
+      next: (val) => {
+        console.log(val);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }
