@@ -12,6 +12,8 @@
       </button>
     </div>
   </div>
+  <div class="collection-detail__list"></div>
+
   <code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">
     <ng-container *ngIf="!deleteCollectionView">
       <form [formGroup]="editCollectionForm">

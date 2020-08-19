@@ -58,4 +58,6 @@ export class SnipsService {
         })
       );
   }
+
+  getSnipsFromCollection(collectionId: string) {}
 }
