@@ -7,15 +7,64 @@
       <button (click)="editCollection(collection)">
         <i class="material-icons">edit</i>
       </button>
-      <button (click)="addSnip(collection)" class="collection-detail__add-snip">
+      <button (click)="showSnipModal()" class="collection-detail__add-snip">
         <i class="material-icons">add_circle</i>
       </button>
     </div>
   </div>
-  <div class="collection-detail__list"></div>
+  <div
+    class="collection-detail__list"
+    *ngIf="collectionDetail$ | async as collectionDetail"
+  >
+    <ul>
+      <li *ngFor="let detail of collectionDetail">
+        <h4>{{ detail.title }}</h4>
+      </li>
+    </ul>
+  </div>
 
-  <code-modal [visible]="modalVisible" (outsideClicked)="outsideModalClicked()">
+  <code-modal
+    [visible]="addSnipModalVisible"
+    (outsideClicked)="outsideAddSnipModalClicked()"
+  >
+    <h1>Add new Snip</h1>
+    <form [formGroup]="addSnipForm">
+      <input
+        class="code-modal__text"
+        type="text"
+        formControlName="snipTitle"
+        placeholder="Title"
+        #snipNameInput
+      />
+
+      <input
+        class="code-modal__text"
+        type="text"
+        formControlName="snipText"
+        placeholder="Text"
+      />
+
+      <div class="code-modal__button-actions">
+        <button class="highlight" type="submit" (click)="addSnip(collection)">
+          Save
+        </button>
+        <button
+          class="no-highlight"
+          type="button"
+          (click)="hideAndResetAddSnipModal()"
+        >
+          Abort
+        </button>
+      </div>
+    </form>
+  </code-modal>
+
+  <code-modal
+    [visible]="editCollectionModalVisible"
+    (outsideClicked)="outsideEditCollectionModalClicked()"
+  >
     <ng-container *ngIf="!deleteCollectionView">
+      <h1>Edit Collection</h1>
       <form [formGroup]="editCollectionForm">
         <input
           class="code-modal__text"
@@ -33,7 +82,7 @@
           <button
             class="no-highlight"
             type="button"
-            (click)="hideAndResetModal()"
+            (click)="hideAndResetEditCollectionModal()"
           >
             Abort
           </button>
@@ -50,7 +99,11 @@
         <button class="no-highlight" (click)="deleteCollection(collection)">
           Yes Delete!
         </button>
-        <button class="highlight" type="button" (click)="hideAndResetModal()">
+        <button
+          class="highlight"
+          type="button"
+          (click)="hideAndResetEditCollectionModal()"
+        >
           Abort
         </button>
       </div>

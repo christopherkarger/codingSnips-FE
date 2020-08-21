@@ -1,19 +1,18 @@
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
-import { SnipCollection } from "./collections.service";
 import { Observable, throwError } from "rxjs";
 import { AuthService } from "./auth.service";
 import { map, catchError } from "rxjs/operators";
 
-export type Snip = {
+export interface ISnip {
   _id: string;
   title: string;
   text: string;
-};
+}
 
 type CreateSnipMutation = {
-  createSnip: Snip;
+  createSnip: ISnip;
 };
 
 const createSnipMutation = gql`
@@ -28,6 +27,19 @@ const createSnipMutation = gql`
   }
 `;
 
+type SnipsFromCollectionQuery = {
+  snipsFromCollection: ISnip[];
+};
+
+const snipsFromCollectionQuery = gql`
+  query snipsFromCollection($collectionId: String!) {
+    snipsFromCollection(collectionId: $collectionId) {
+      _id
+      title
+    }
+  }
+`;
+
 @Injectable({
   providedIn: "root",
 })
@@ -38,7 +50,7 @@ export class SnipsService {
     collectionId: string,
     title: string,
     text: string
-  ): Observable<Snip | undefined> {
+  ): Observable<ISnip | undefined> {
     return this.apollo
       .mutate<CreateSnipMutation>({
         mutation: createSnipMutation,
@@ -59,5 +71,22 @@ export class SnipsService {
       );
   }
 
-  getSnipsFromCollection(collectionId: string) {}
+  getSnipsFromCollection(collectionId: string): Observable<ISnip[]> {
+    return this.apollo
+      .watchQuery<SnipsFromCollectionQuery>({
+        query: snipsFromCollectionQuery,
+        variables: {
+          collectionId,
+        },
+      })
+      .valueChanges.pipe(
+        map((result) => {
+          return result.data.snipsFromCollection;
+        }),
+        catchError((error) => {
+          this.authService.checkError(error);
+          return throwError(error);
+        })
+      );
+  }
 }

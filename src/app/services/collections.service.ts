@@ -6,14 +6,14 @@ import { take, tap, map, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { AuthService } from "./auth.service";
 
-export type SnipCollection = {
+export interface ISnipCollection {
   _id: string;
   title: string;
   snips?: any[];
-};
+}
 
 type SnipsCollectionByIdQuery = {
-  snipsCollectionById: SnipCollection;
+  snipsCollectionById: ISnipCollection;
 };
 
 const snipsCollectionByIdQuery = gql`
@@ -29,7 +29,7 @@ const snipsCollectionByIdQuery = gql`
 `;
 
 type AllSnipsCollectionsQuery = {
-  snipsCollections: SnipCollection[];
+  snipsCollections: ISnipCollection[];
 };
 
 const allSnipsCollectionsQuery = gql`
@@ -42,7 +42,7 @@ const allSnipsCollectionsQuery = gql`
 `;
 
 type UpdateSnipsCollectionNameMutation = {
-  updateSnipsCollectionName: SnipCollection;
+  updateSnipsCollectionName: ISnipCollection;
 };
 
 const updateSnipsCollectionNameMutation = gql`
@@ -55,7 +55,7 @@ const updateSnipsCollectionNameMutation = gql`
 `;
 
 type CreateSnipsCollectionMutation = {
-  createSnipsCollection: SnipCollection;
+  createSnipsCollection: ISnipCollection;
 };
 
 const createSnipsCollectionMutation = gql`
@@ -68,7 +68,7 @@ const createSnipsCollectionMutation = gql`
 `;
 
 type DeleteSnipsCollectionMutation = {
-  deleteSnipsCollection: SnipCollection;
+  deleteSnipsCollection: ISnipCollection;
 };
 
 const deleteSnipsCollectionMutation = gql`
@@ -100,7 +100,7 @@ export class CollectionsService {
     private authService: AuthService
   ) {}
 
-  getCollectionDetails(collectionId: string): Observable<SnipCollection> {
+  getCollectionDetails(collectionId: string): Observable<ISnipCollection> {
     return this.apollo
       .watchQuery<SnipsCollectionByIdQuery>({
         query: snipsCollectionByIdQuery,
@@ -120,7 +120,7 @@ export class CollectionsService {
       );
   }
 
-  getAllCollections(): Observable<SnipCollection[]> {
+  getAllCollections(): Observable<ISnipCollection[]> {
     return this.apollo
       .watchQuery<AllSnipsCollectionsQuery>({
         query: allSnipsCollectionsQuery,
@@ -140,7 +140,7 @@ export class CollectionsService {
   updateCollection(
     collectionId: string,
     title: string
-  ): Observable<SnipCollection | undefined> {
+  ): Observable<ISnipCollection | undefined> {
     return this.apollo
       .mutate<UpdateSnipsCollectionNameMutation>({
         mutation: updateSnipsCollectionNameMutation,
@@ -160,7 +160,7 @@ export class CollectionsService {
       );
   }
 
-  saveNewCollection(title: string): Observable<SnipCollection | undefined> {
+  saveNewCollection(title: string): Observable<ISnipCollection | undefined> {
     return this.apollo
       .mutate<CreateSnipsCollectionMutation>({
         mutation: createSnipsCollectionMutation,
@@ -207,8 +207,8 @@ export class CollectionsService {
   }
 
   deleteCollection(
-    collection: SnipCollection
-  ): Observable<SnipCollection | undefined> {
+    collection: ISnipCollection
+  ): Observable<ISnipCollection | undefined> {
     return this.apollo
       .mutate<DeleteSnipsCollectionMutation>({
         mutation: deleteSnipsCollectionMutation,
@@ -224,7 +224,7 @@ export class CollectionsService {
             });
 
             const newData = data.snipsCollections.filter(
-              (col: SnipCollection) => col._id !== collection._id
+              (col: ISnipCollection) => col._id !== collection._id
             );
 
             if (newData.length === 0) {

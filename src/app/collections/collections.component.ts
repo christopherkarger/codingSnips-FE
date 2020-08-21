@@ -13,7 +13,7 @@ import {
 } from "@angular/forms";
 import {
   CollectionsService,
-  SnipCollection,
+  ISnipCollection,
 } from "../services/collections.service";
 import { Observable, throwError } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
@@ -30,7 +30,7 @@ export class CollectionsComponent implements OnInit {
   modalVisible = false;
   collectionAddError = false;
   newCodeListForm: FormGroup;
-  allCollections$?: Observable<SnipCollection[] | undefined>;
+  allCollections$?: Observable<ISnipCollection[] | undefined>;
   loading?: boolean;
   error?: boolean;
 
@@ -111,7 +111,7 @@ export class CollectionsComponent implements OnInit {
     this.collectionsService.updateCollection(id, "changed title").subscribe();
   }
 
-  openCollection(collection: SnipCollection): void {
+  openCollection(collection: ISnipCollection): void {
     this.router.navigate(["/collections", collection._id]);
   }
 }

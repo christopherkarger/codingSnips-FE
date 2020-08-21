@@ -2,9 +2,9 @@ import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import {
   CollectionsService,
-  SnipCollection,
+  ISnipCollection,
 } from "../services/collections.service";
-import { SnipsService } from "../services/snips.service";
+import { ISnip, SnipsService } from "../services/snips.service";
 import { Observable } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
@@ -19,9 +19,16 @@ export class CollectionDetailsComponent implements OnInit {
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
 
+  @ViewChild("snipNameInput")
+  snipNameInput?: ElementRef;
+
   editCollectionForm: FormGroup;
-  modalVisible = false;
-  collection$?: Observable<SnipCollection>;
+  addSnipForm: FormGroup;
+  editCollectionModalVisible = false;
+  addSnipModalVisible = false;
+  collection$?: Observable<ISnipCollection>;
+
+  collectionDetail$?: Observable<ISnip[]>;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -33,6 +40,11 @@ export class CollectionDetailsComponent implements OnInit {
     this.editCollectionForm = this.fb.group({
       collectionName: new FormControl(""),
     });
+
+    this.addSnipForm = this.fb.group({
+      snipTitle: new FormControl(""),
+      snipText: new FormControl(""),
+    });
   }
 
   ngOnInit(): void {
@@ -40,18 +52,22 @@ export class CollectionDetailsComponent implements OnInit {
       this.collection$ = this.collectionService.getCollectionDetails(
         routeParams.id
       );
+
+      this.collectionDetail$ = this.snipsService.getSnipsFromCollection(
+        routeParams.id
+      );
     });
   }
 
-  hideModal(): void {
-    this.modalVisible = false;
+  private hideEditCollectionModal(): void {
+    this.editCollectionModalVisible = false;
   }
 
-  outsideModalClicked(): void {
-    this.hideAndResetModal();
+  outsideEditCollectionModalClicked(): void {
+    this.hideAndResetEditCollectionModal();
   }
 
-  editCollection(collection: SnipCollection): void {
+  editCollection(collection: ISnipCollection): void {
     if (this.collectionNameInput) {
       this.collectionNameInput.nativeElement.focus();
     }
@@ -59,10 +75,10 @@ export class CollectionDetailsComponent implements OnInit {
     this.editCollectionForm.patchValue({
       collectionName: collection.title,
     });
-    this.modalVisible = true;
+    this.editCollectionModalVisible = true;
   }
 
-  saveEditCollection(collection: SnipCollection): void {
+  saveEditCollection(collection: ISnipCollection): void {
     const input = this.editCollectionForm.get("collectionName");
 
     if (input) {
@@ -72,16 +88,21 @@ export class CollectionDetailsComponent implements OnInit {
           next: () => {
             this.collectionUpdateError = false;
           },
-          error: () => {
+          error: (err) => {
             this.collectionUpdateError = true;
+            throw err;
           },
         });
-      this.hideModal();
+      this.hideEditCollectionModal();
     }
   }
 
-  hideAndResetModal(): void {
-    this.hideModal();
+  outsideAddSnipModalClicked(): void {
+    this.hideAndResetAddSnipModal();
+  }
+
+  hideAndResetEditCollectionModal(): void {
+    this.hideEditCollectionModal();
     this.resetDeleteCollection();
   }
 
@@ -89,29 +110,50 @@ export class CollectionDetailsComponent implements OnInit {
     this.deleteCollectionView = true;
   }
 
-  deleteCollection(collection: SnipCollection): void {
+  deleteCollection(collection: ISnipCollection): void {
     this.collectionService.deleteCollection(collection).subscribe({
       next: () => {
-        this.hideAndResetModal();
+        this.hideAndResetEditCollectionModal();
       },
       error: (err) => {
-        console.log(err);
+        throw err;
       },
     });
   }
 
-  resetDeleteCollection(): void {
+  private resetDeleteCollection(): void {
     this.deleteCollectionView = false;
   }
 
-  addSnip(collection: SnipCollection): void {
-    this.snipsService.addSnip(collection._id, "Hallo", "snips").subscribe({
-      next: (val) => {
-        console.log(val);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+  hideAndResetAddSnipModal(): void {
+    this.hideAddSnipModal();
+  }
+
+  private hideAddSnipModal(): void {
+    this.addSnipModalVisible = false;
+  }
+
+  showSnipModal(): void {
+    this.addSnipModalVisible = true;
+    if (this.snipNameInput) {
+      this.snipNameInput.nativeElement.focus();
+    }
+  }
+
+  addSnip(collection: ISnipCollection): void {
+    const snipTitle = this.addSnipForm.get("snipTitle");
+    const snipText = this.addSnipForm.get("snipText");
+
+    if (snipTitle && snipText) {
+      this.snipsService
+        .addSnip(collection._id, snipTitle.value, snipText.value)
+        .subscribe({
+          next: () => {},
+          error: (err) => {
+            throw err;
+          },
+        });
+    }
+    this.hideAndResetAddSnipModal();
   }
 }
