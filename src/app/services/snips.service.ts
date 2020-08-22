@@ -62,6 +62,33 @@ export class SnipsService {
       })
       .pipe(
         map((result) => {
+          if (result.data) {
+            //console.log(result.data.createSnip);
+
+            const data = this.apollo.getClient().readQuery({
+              query: snipsFromCollectionQuery,
+              variables: {
+                collectionId,
+              },
+            });
+
+            const newSnip = {
+              _id: result.data.createSnip._id,
+              title,
+              __typename: "Snip",
+            };
+
+            this.apollo.getClient().writeQuery({
+              query: snipsFromCollectionQuery,
+              variables: {
+                collectionId,
+              },
+              data: {
+                snipsFromCollection: [...data.snipsFromCollection, newSnip],
+              },
+            });
+          }
+
           return result.data?.createSnip;
         }),
         catchError((error) => {

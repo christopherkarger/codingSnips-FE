@@ -15,6 +15,7 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 export class CollectionDetailsComponent implements OnInit {
   deleteCollectionView = false;
   collectionUpdateError = false;
+  snipAddError = false;
 
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
@@ -113,9 +114,11 @@ export class CollectionDetailsComponent implements OnInit {
   deleteCollection(collection: ISnipCollection): void {
     this.collectionService.deleteCollection(collection).subscribe({
       next: () => {
+        this.collectionUpdateError = false;
         this.hideAndResetEditCollectionModal();
       },
       error: (err) => {
+        this.collectionUpdateError = true;
         throw err;
       },
     });
@@ -148,8 +151,11 @@ export class CollectionDetailsComponent implements OnInit {
       this.snipsService
         .addSnip(collection._id, snipTitle.value, snipText.value)
         .subscribe({
-          next: () => {},
+          next: () => {
+            this.snipAddError = false;
+          },
           error: (err) => {
+            this.snipAddError = true;
             throw err;
           },
         });

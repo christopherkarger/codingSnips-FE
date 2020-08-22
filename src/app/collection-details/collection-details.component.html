@@ -112,6 +112,11 @@
 </div>
 
 <toaster
+  [(visible)]="snipAddError"
+  msg="Could not add Snip! Please try again later."
+></toaster>
+
+<toaster
   [(visible)]="collectionUpdateError"
-  msg="Could not rename your collection! Please try again later."
+  msg="Could not save your changes! Please try again later."
 ></toaster>
