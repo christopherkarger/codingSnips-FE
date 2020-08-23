@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   graphQLUri: "http://localhost:4000",
+  loginStorageKey: "cod-login-token",
 };
 
 /*

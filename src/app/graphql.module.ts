@@ -5,7 +5,6 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import { environment } from "../environments/environment";
-import { loginStorageKey } from "./services/auth.service";
 
 export function createApollo(httpLink: HttpLink) {
   const basic = setContext((operation, context) => ({
@@ -16,7 +15,7 @@ export function createApollo(httpLink: HttpLink) {
 
   // Get the authentication token from local storage if it exists
   const auth = setContext((operation, context) => {
-    const token = localStorage.getItem(loginStorageKey);
+    const token = localStorage.getItem(environment.loginStorageKey);
     return {
       headers: {
         Authorization: `Bearer ${token}`,

@@ -109,10 +109,6 @@ export class CollectionsService {
         map((result) => {
           console.log(result);
           return result.data.snipsCollectionById;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
@@ -124,10 +120,6 @@ export class CollectionsService {
         map((result) => {
           this.collectionsLoaded = true;
           return result.data.snipsCollections;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
@@ -147,10 +139,6 @@ export class CollectionsService {
       .pipe(
         map((result) => {
           return result.data?.updateSnipsCollectionName;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
@@ -181,10 +169,6 @@ export class CollectionsService {
           }
 
           return result.data?.createSnipsCollection;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
@@ -220,10 +204,6 @@ export class CollectionsService {
           }
 
           return result.data?.deleteSnipsCollection;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }

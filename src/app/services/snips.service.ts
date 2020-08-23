@@ -83,10 +83,6 @@ export class SnipsService {
           }
 
           return result.data?.createSnip;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
@@ -99,10 +95,6 @@ export class SnipsService {
       .pipe(
         map((result) => {
           return result.data.snipsFromCollection;
-        }),
-        catchError((error) => {
-          this.authService.checkError(error);
-          return throwError(error);
         })
       );
   }
