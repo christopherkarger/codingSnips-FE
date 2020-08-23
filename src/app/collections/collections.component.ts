@@ -11,13 +11,11 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-import {
-  CollectionsService,
-  ISnipCollection,
-} from "../services/collections.service";
+import { CollectionsService } from "../services/collections.service";
 import { Observable, throwError } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { ISnipCollection } from "../graphql/model/collections";
 
 @Component({
   templateUrl: "./collections.component.html",

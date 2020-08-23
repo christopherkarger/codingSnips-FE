@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import {
-  CollectionsService,
-  ISnipCollection,
-} from "../services/collections.service";
-import { ISnip, SnipsService } from "../services/snips.service";
+import { CollectionsService } from "../services/collections.service";
+import { ISnip } from "../graphql/model/snips";
+import { ISnipCollection } from "../graphql/model/collections";
+import { SnipsService } from "../services/snips.service";
 import { Observable } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
@@ -130,6 +129,10 @@ export class CollectionDetailsComponent implements OnInit {
 
   hideAndResetAddSnipModal(): void {
     this.hideAddSnipModal();
+    this.addSnipForm.patchValue({
+      snipTitle: "",
+      snipText: "",
+    });
   }
 
   private hideAddSnipModal(): void {

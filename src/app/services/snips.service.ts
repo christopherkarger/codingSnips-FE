@@ -1,44 +1,17 @@
 import { Injectable } from "@angular/core";
-import gql from "graphql-tag";
-import { Observable, throwError } from "rxjs";
+import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
-import { map, catchError } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { GraphQlService } from "./graphql.service";
-
-export interface ISnip {
-  _id: string;
-  title: string;
-  text: string;
-}
-
-type CreateSnipMutation = {
-  createSnip: ISnip;
-};
-
-const createSnipMutation = gql`
-  mutation createSnip($collectionId: String!, $text: String!, $title: String!) {
-    createSnip(
-      snipInput: { collectionId: $collectionId, text: $text, title: $title }
-    ) {
-      _id
-      title
-      text
-    }
-  }
-`;
-
-type SnipsFromCollectionQuery = {
-  snipsFromCollection: ISnip[];
-};
-
-const snipsFromCollectionQuery = gql`
-  query snipsFromCollection($collectionId: String!) {
-    snipsFromCollection(collectionId: $collectionId) {
-      _id
-      title
-    }
-  }
-`;
+import {
+  ISnip,
+  CreateSnipMutation,
+  SnipsFromCollectionQuery,
+} from "../graphql/model/snips";
+import {
+  createSnipMutation,
+  snipsFromCollectionQuery,
+} from "../graphql/gql/snips";
 
 @Injectable({
   providedIn: "root",
