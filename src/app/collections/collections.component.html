@@ -22,11 +22,8 @@
   <loading [loading]="loading && !error" [white]="true"></loading>
 
   <ul class="collections-sidebar__items">
-    <li
-      *ngFor="let item of allCollections$ | async"
-      (click)="openCollection(item)"
-    >
-      {{ item.title }}
+    <li *ngFor="let item of allCollections$ | async">
+      <button (click)="openCollection(item)">{{ item.title }}</button>
       <!--   <button (click)="updateCollectionTitle(item._id)">Click</button> -->
     </li>
   </ul>

@@ -8,7 +8,7 @@
   background-color: $mainColor;
   color: #fff;
   overflow: auto;
-  padding: 25px;
+  padding: 0;
   box-sizing: border-box;
   h1 {
     font-size: 16px;
@@ -18,7 +18,7 @@
   &__top {
     display: flex;
     position: relative;
-    margin-bottom: 20px;
+    padding: 25px 25px 10px 25px;
     .add-list {
       margin-left: auto;
       &:hover {
@@ -32,9 +32,18 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    li {
-      margin-bottom: 10px;
-      cursor: pointer;
+    // li {
+    //   margin-bottom: 10px;
+    // }
+    button {
+      padding: 15px 25px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: left;
+      &:hover {
+        color: #fff;
+        background-color: $textColor;
+      }
     }
   }
 }

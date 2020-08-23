@@ -7,9 +7,9 @@
   border-right: 1px solid $color2;
   &__header {
     display: flex;
-    padding: 20px;
+    padding: 25px 25px 10px 25px;
     h2 {
-      font-size: 20px;
+      font-size: 17px;
       max-width: 260px;
     }
   }
@@ -26,5 +26,20 @@
 
   &__add-snip {
     margin-left: 10px;
+  }
+
+  &__list {
+    li {
+      border-top: 1px solid $color5;
+    }
+    li:last-child {
+      border-bottom: 1px solid $color5;
+    }
+    button {
+      width: 100%;
+      padding: 15px 25px;
+      box-sizing: border-box;
+      text-align: left;
+    }
   }
 }
