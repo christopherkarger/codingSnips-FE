@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Apollo } from "apollo-angular";
 import gql from "graphql-tag";
 import { Observable, throwError } from "rxjs";
 import { AuthService } from "./auth.service";
 import { map, catchError } from "rxjs/operators";
+import { GraphQlService } from "./graphql.service";
 
 export interface ISnip {
   _id: string;
@@ -44,33 +44,28 @@ const snipsFromCollectionQuery = gql`
   providedIn: "root",
 })
 export class SnipsService {
-  constructor(private apollo: Apollo, private authService: AuthService) {}
+  constructor(
+    private graphQlService: GraphQlService,
+    private authService: AuthService
+  ) {}
 
   addSnip(
     collectionId: string,
     title: string,
     text: string
   ): Observable<ISnip | undefined> {
-    return this.apollo
-      .mutate<CreateSnipMutation>({
-        mutation: createSnipMutation,
-        variables: {
-          collectionId,
-          title,
-          text,
-        },
+    return this.graphQlService
+      .mutate<CreateSnipMutation, ISnip>(createSnipMutation, {
+        collectionId,
+        title,
+        text,
       })
       .pipe(
         map((result) => {
           if (result.data) {
-            //console.log(result.data.createSnip);
-
-            const data = this.apollo.getClient().readQuery({
-              query: snipsFromCollectionQuery,
-              variables: {
-                collectionId,
-              },
-            });
+            const data = this.graphQlService.readQuery<
+              SnipsFromCollectionQuery
+            >(snipsFromCollectionQuery, { collectionId });
 
             const newSnip = {
               _id: result.data.createSnip._id,
@@ -78,15 +73,13 @@ export class SnipsService {
               __typename: "Snip",
             };
 
-            this.apollo.getClient().writeQuery({
-              query: snipsFromCollectionQuery,
-              variables: {
-                collectionId,
-              },
-              data: {
-                snipsFromCollection: [...data.snipsFromCollection, newSnip],
-              },
-            });
+            if (data) {
+              this.graphQlService.writeQuery(
+                snipsFromCollectionQuery,
+                { snipsFromCollection: [...data.snipsFromCollection, newSnip] },
+                { collectionId }
+              );
+            }
           }
 
           return result.data?.createSnip;
@@ -99,14 +92,11 @@ export class SnipsService {
   }
 
   getSnipsFromCollection(collectionId: string): Observable<ISnip[]> {
-    return this.apollo
-      .watchQuery<SnipsFromCollectionQuery>({
-        query: snipsFromCollectionQuery,
-        variables: {
-          collectionId,
-        },
+    return this.graphQlService
+      .watchQuery<SnipsFromCollectionQuery>(snipsFromCollectionQuery, {
+        collectionId,
       })
-      .valueChanges.pipe(
+      .pipe(
         map((result) => {
           return result.data.snipsFromCollection;
         }),
