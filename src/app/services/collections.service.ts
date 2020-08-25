@@ -47,7 +47,6 @@ export class CollectionsService {
       })
       .pipe(
         map((result) => {
-          console.log(result);
           return result.data.snipsCollectionById;
         })
       );

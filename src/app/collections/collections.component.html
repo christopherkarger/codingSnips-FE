@@ -23,8 +23,12 @@
 
   <ul class="collections-sidebar__items">
     <li *ngFor="let item of allCollections$ | async">
-      <button (click)="openCollection(item)">{{ item.title }}</button>
-      <!--   <button (click)="updateCollectionTitle(item._id)">Click</button> -->
+      <button
+        [routerLink]="'/collections/' + item._id"
+        routerLinkActive="active-link"
+      >
+        {{ item.title }}
+      </button>
     </li>
   </ul>
 </div>

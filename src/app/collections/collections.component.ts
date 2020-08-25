@@ -108,8 +108,4 @@ export class CollectionsComponent implements OnInit {
   updateCollectionTitle(id: string): void {
     this.collectionsService.updateCollection(id, "changed title").subscribe();
   }
-
-  openCollection(collection: ISnipCollection): void {
-    this.router.navigate(["/collections", collection._id]);
-  }
 }
