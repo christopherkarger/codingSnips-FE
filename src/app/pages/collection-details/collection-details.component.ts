@@ -1,17 +1,28 @@
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { CollectionsService } from "../services/collections.service";
-import { ISnip } from "../graphql/model/snips";
-import { ISnipCollection } from "../graphql/model/collections";
-import { SnipsService } from "../services/snips.service";
-import { Observable } from "rxjs";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+} from "@angular/core";
+import {
+  ActivatedRoute,
+  ActivationStart,
+  RouterOutlet,
+  Router,
+} from "@angular/router";
+import { CollectionsService } from "../../services/collections.service";
+import { ISnip } from "../../graphql/model/snips";
+import { ISnipCollection } from "../../graphql/model/collections";
+import { SnipsService } from "../../services/snips.service";
+import { Observable, Subscription } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
 @Component({
   templateUrl: "./collection-details.component.html",
   styleUrls: ["./collection-details.component.scss"],
 })
-export class CollectionDetailsComponent implements OnInit {
+export class CollectionDetailsComponent implements OnInit, OnDestroy {
   deleteCollectionView = false;
   collectionUpdateError = false;
   snipAddError = false;
@@ -27,11 +38,16 @@ export class CollectionDetailsComponent implements OnInit {
   editCollectionModalVisible = false;
   addSnipModalVisible = false;
   collection$?: Observable<ISnipCollection>;
+  routeSub$?: Subscription;
+
+  @ViewChild("routerOutlet")
+  outlet?: RouterOutlet;
 
   collectionDetail$?: Observable<ISnip[]>;
 
   constructor(
     private activeRoute: ActivatedRoute,
+    private router: Router,
     private collectionService: CollectionsService,
     private fb: FormBuilder,
     private collectionsService: CollectionsService,
@@ -48,7 +64,7 @@ export class CollectionDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activeRoute.params.subscribe((routeParams) => {
+    this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
       this.collection$ = this.collectionService.getCollectionDetails(
         routeParams.id
       );
@@ -57,6 +73,12 @@ export class CollectionDetailsComponent implements OnInit {
         routeParams.id
       );
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSub$) {
+      this.routeSub$.unsubscribe();
+    }
   }
 
   private hideEditCollectionModal(): void {

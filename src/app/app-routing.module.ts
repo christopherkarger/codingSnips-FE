@@ -12,7 +12,7 @@ const routes: Routes = [
     path: "collections",
     canActivate: [AuthguardService],
     loadChildren: () =>
-      import("./collections/collections.module").then(
+      import("./pages/collections/collections.module").then(
         (m) => m.CollectionsModule
       ),
   },

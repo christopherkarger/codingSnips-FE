@@ -18,7 +18,9 @@
   >
     <ul>
       <li *ngFor="let detail of collectionDetail">
-        <button>{{ detail.title }}</button>
+        <button [routerLink]="[detail._id]" routerLinkActive="active-link">
+          {{ detail.title }}
+        </button>
       </li>
     </ul>
   </div>
@@ -120,3 +122,5 @@
   [(visible)]="collectionUpdateError"
   msg="Could not save your changes! Please try again later."
 ></toaster>
+
+<router-outlet></router-outlet>

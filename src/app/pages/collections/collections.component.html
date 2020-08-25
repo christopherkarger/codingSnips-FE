@@ -8,9 +8,7 @@
       class="add-list"
       (click)="showModal()"
     >
-      <i class="material-icons">
-        add_circle
-      </i>
+      <i class="material-icons"> add_circle </i>
     </button>
   </div>
 
@@ -23,10 +21,7 @@
 
   <ul class="collections-sidebar__items">
     <li *ngFor="let item of allCollections$ | async">
-      <button
-        [routerLink]="'/collections/' + item._id"
-        routerLinkActive="active-link"
-      >
+      <button [routerLink]="item._id" routerLinkActive="active-link">
         {{ item.title }}
       </button>
     </li>

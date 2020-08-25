@@ -1,5 +1,7 @@
-@import "../../variables.scss";
-
+@import "../../../variables.scss";
+:host {
+  display: contents;
+}
 .collection-detail {
   height: 100vh;
   width: 400px;
