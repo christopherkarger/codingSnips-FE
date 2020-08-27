@@ -1,1 +1,4 @@
-<div>Ich bin a Kind</div>
+<div *ngIf="snip$ | async as snip">
+  <h2>{{ snip.title }}</h2>
+  <p>{{ snip.text }}</p>
+</div>

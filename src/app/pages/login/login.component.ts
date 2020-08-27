@@ -5,7 +5,7 @@ import {
   FormControl,
   Validators,
 } from "@angular/forms";
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "../../services/auth.service";
 import { catchError, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { subscribe } from "graphql";

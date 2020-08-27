@@ -20,3 +20,13 @@ export const snipsFromCollectionQuery = gql`
     }
   }
 `;
+
+export const snipDetailsQuery = gql`
+  query snipDetails($snipId: String!) {
+    snipDetails(snipId: $snipId) {
+      _id
+      title
+      text
+    }
+  }
+`;

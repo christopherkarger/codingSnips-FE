@@ -7,10 +7,13 @@ import {
   ISnip,
   CreateSnipMutation,
   SnipsFromCollectionQuery,
+  SnipDetailsQuery,
+  ISnipDetails,
 } from "../graphql/model/snips";
 import {
   createSnipMutation,
   snipsFromCollectionQuery,
+  snipDetailsQuery,
 } from "../graphql/gql/snips";
 
 @Injectable({
@@ -68,6 +71,18 @@ export class SnipsService {
       .pipe(
         map((result) => {
           return result.data.snipsFromCollection;
+        })
+      );
+  }
+
+  getAllSnipDetailsFromCollection(snipId: string): Observable<ISnipDetails> {
+    return this.graphQlService
+      .watchQuery<SnipDetailsQuery>(snipDetailsQuery, {
+        snipId,
+      })
+      .pipe(
+        map((result) => {
+          return result.data.snipDetails;
         })
       );
   }
