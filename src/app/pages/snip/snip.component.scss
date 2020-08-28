@@ -2,3 +2,23 @@
 :host {
   display: contents;
 }
+
+.snip {
+  padding: 25px;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: auto;
+  &__header {
+    display: flex;
+    margin-bottom: 30px;
+  }
+
+  &__actions {
+    margin-left: auto;
+  }
+}
+
+h2 {
+  font-size: 24px;
+}

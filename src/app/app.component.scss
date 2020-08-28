@@ -14,11 +14,12 @@
   background-color: $color1;
   width: 60px;
   height: 100vh;
+  flex: 0 0 auto;
 }
 
 .user {
   position: absolute;
-  bottom: 10px;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
   color: #fff;

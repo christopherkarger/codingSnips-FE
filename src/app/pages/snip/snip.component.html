@@ -1,4 +1,29 @@
-<div *ngIf="snip$ | async as snip">
-  <h2>{{ snip.title }}</h2>
+<div class="snip" *ngIf="snip$ | async as snip">
+  <div class="snip__header">
+    <h2>{{ snip.title }}</h2>
+    <div class="snip__actions">
+      <button (click)="editSnip(snip)">
+        <i class="material-icons">edit</i>
+      </button>
+    </div>
+  </div>
   <p>{{ snip.text }}</p>
+  <code-modal
+    [visible]="editSnipModalVisible"
+    (outsideClicked)="outsideSnipModalClicked()"
+  >
+    <h1>Edit your Snippet</h1>
+    <form [formGroup]="editSnipForm">
+      <input class="code-modal__text" formControlName="snipTitle" />
+      <input class="code-modal__text" formControlName="snipText" />
+      <div class="code-modal__button-actions">
+        <button class="highlight" type="submit" (click)="saveEditSnip(snip)">
+          Save
+        </button>
+        <button class="no-highlight" type="button" (click)="abortEditSnip()">
+          Abort
+        </button>
+      </div>
+    </form>
+  </code-modal>
 </div>

@@ -20,3 +20,7 @@ export type SnipsFromCollectionQuery = {
 export type SnipDetailsQuery = {
   snipDetails: ISnipDetails;
 };
+
+export type UpdateSnipMutation = {
+  updateSnip: ISnipDetails;
+};
