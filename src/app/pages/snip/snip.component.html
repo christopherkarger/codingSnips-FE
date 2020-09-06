@@ -1,56 +1,58 @@
-<div class="snip" *ngIf="snip$ | async as snip">
-  <div class="snip__header">
-    <h2>{{ snip.title }}</h2>
-    <div class="snip__actions">
-      <button (click)="editSnip(snip)">
-        <i class="material-icons">edit</i>
-      </button>
-
-      <button (click)="deleteSnip()">
-        <i class="material-icons">delete</i>
-      </button>
-    </div>
-  </div>
-  <p>{{ snip.text }}</p>
-  <code-modal
-    [visible]="deleteSnipModalVisible"
-    (outsideClicked)="hideDeleteSnipModal()"
-  >
-    <h3 class="warn">Do you really want to delete this collection?</h3>
-    <div class="code-modal__button-actions">
-      <button class="no-highlight" (click)="deleteSnipRequest(snip)">
-        Yes Delete!
-      </button>
-      <button class="highlight" type="button" (click)="hideDeleteSnipModal()">
-        Abort
-      </button>
-    </div>
-  </code-modal>
-
-  <code-modal
-    [visible]="editSnipModalVisible"
-    (outsideClicked)="outsideEditSnipModalClicked()"
-  >
-    <h1>Edit your Snippet</h1>
-    <form [formGroup]="editSnipForm">
-      <input class="code-modal__text" formControlName="snipTitle" />
-      <input class="code-modal__text" formControlName="snipText" />
-      <div class="code-modal__button-actions">
-        <button class="highlight" type="submit" (click)="saveEditSnip(snip)">
-          Save
+<div class="snip">
+  <ng-container *ngIf="snip$ | async as snip">
+    <div class="snip__header">
+      <h2>{{ snip.title }}</h2>
+      <div class="snip__actions">
+        <button (click)="editSnip(snip)">
+          <i class="material-icons">edit</i>
         </button>
-        <button class="no-highlight" type="button" (click)="abortEditSnip()">
+
+        <button (click)="deleteSnip()">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </div>
+    <p>{{ snip.text }}</p>
+    <code-modal
+      [visible]="deleteSnipModalVisible"
+      (outsideClicked)="hideDeleteSnipModal()"
+    >
+      <h3 class="warn">Do you really want to delete this collection?</h3>
+      <div class="code-modal__button-actions">
+        <button class="no-highlight" (click)="deleteSnipRequest(snip)">
+          Yes Delete!
+        </button>
+        <button class="highlight" type="button" (click)="hideDeleteSnipModal()">
           Abort
         </button>
       </div>
-    </form>
-  </code-modal>
-</div>
+    </code-modal>
 
-<error
-  [error]="initError"
-  msg="A problem occured while loading your Snippet!"
-></error>
+    <code-modal
+      [visible]="editSnipModalVisible"
+      (outsideClicked)="outsideEditSnipModalClicked()"
+    >
+      <h1>Edit your Snippet</h1>
+      <form [formGroup]="editSnipForm">
+        <input class="code-modal__text" formControlName="snipTitle" />
+        <input class="code-modal__text" formControlName="snipText" />
+        <div class="code-modal__button-actions">
+          <button class="highlight" type="submit" (click)="saveEditSnip(snip)">
+            Save
+          </button>
+          <button class="no-highlight" type="button" (click)="abortEditSnip()">
+            Abort
+          </button>
+        </div>
+      </form>
+    </code-modal>
+  </ng-container>
+  <loading [loading]="loading && !initError"></loading>
+  <error
+    [error]="initError"
+    msg="A problem occured while loading your Snippet!"
+  ></error>
+</div>
 
 <toaster
   [(visible)]="snipUpdateError"

@@ -1,122 +1,128 @@
-<div class="collection-detail" *ngIf="collection$ | async as collection">
-  <div class="collection-detail__header">
-    <h2>
-      {{ collection.title }}
-    </h2>
-    <div class="collection-detail__actions">
-      <button (click)="editCollection(collection)">
-        <i class="material-icons">edit</i>
-      </button>
-      <button (click)="showSnipModal()" class="collection-detail__add-snip">
-        <i class="material-icons">add_circle</i>
-      </button>
-    </div>
-  </div>
-  <div
-    class="collection-detail__list"
-    *ngIf="collectionDetail$ | async as collectionDetail"
-  >
-    <ul>
-      <li *ngFor="let detail of collectionDetail">
-        <button [routerLink]="[detail._id]" routerLinkActive="active-link">
-          {{ detail.title }}
-        </button>
-      </li>
-    </ul>
-  </div>
-
-  <code-modal
-    [visible]="addSnipModalVisible"
-    (outsideClicked)="outsideAddSnipModalClicked()"
-  >
-    <h1>Add new Snippet</h1>
-    <form [formGroup]="addSnipForm">
-      <input
-        class="code-modal__text"
-        type="text"
-        formControlName="snipTitle"
-        placeholder="Title"
-        #snipNameInput
-      />
-
-      <input
-        class="code-modal__text"
-        type="text"
-        formControlName="snipText"
-        placeholder="Text"
-      />
-
-      <div class="code-modal__button-actions">
-        <button class="highlight" type="submit" (click)="addSnip(collection)">
-          Save
-        </button>
-        <button
-          class="no-highlight"
-          type="button"
-          (click)="hideAndResetAddSnipModal()"
-        >
-          Abort
-        </button>
+<div class="collection-detail">
+  <ng-container *ngIf="collection$ | async as collection">
+    <ng-container *ngIf="!loading">
+      <div class="collection-detail__header">
+        <h2>
+          {{ collection.title }}
+        </h2>
+        <div class="collection-detail__actions">
+          <button (click)="editCollection(collection)">
+            <i class="material-icons">edit</i>
+          </button>
+          <button (click)="showSnipModal()" class="collection-detail__add-snip">
+            <i class="material-icons">add_circle</i>
+          </button>
+        </div>
       </div>
-    </form>
-  </code-modal>
+      <div
+        class="collection-detail__list"
+        *ngIf="collectionDetail$ | async as collectionDetail"
+      >
+        <ul>
+          <li *ngFor="let detail of collectionDetail">
+            <button [routerLink]="[detail._id]" routerLinkActive="active-link">
+              {{ detail.title }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
 
-  <code-modal
-    [visible]="editCollectionModalVisible"
-    (outsideClicked)="outsideEditCollectionModalClicked()"
-  >
-    <ng-container *ngIf="!deleteCollectionView">
-      <h1>Edit Collection</h1>
-      <form [formGroup]="editCollectionForm">
+    <code-modal
+      [visible]="addSnipModalVisible"
+      (outsideClicked)="outsideAddSnipModalClicked()"
+    >
+      <h1>Add new Snippet</h1>
+      <form [formGroup]="addSnipForm">
         <input
           class="code-modal__text"
-          formControlName="collectionName"
-          #collectionNameInput
+          type="text"
+          formControlName="snipTitle"
+          placeholder="Title"
+          #snipNameInput
         />
+
+        <input
+          class="code-modal__text"
+          type="text"
+          formControlName="snipText"
+          placeholder="Text"
+        />
+
         <div class="code-modal__button-actions">
-          <button
-            class="highlight"
-            type="submit"
-            (click)="saveEditCollection(collection)"
-          >
+          <button class="highlight" type="submit" (click)="addSnip(collection)">
             Save
           </button>
           <button
             class="no-highlight"
+            type="button"
+            (click)="hideAndResetAddSnipModal()"
+          >
+            Abort
+          </button>
+        </div>
+      </form>
+    </code-modal>
+
+    <code-modal
+      [visible]="editCollectionModalVisible"
+      (outsideClicked)="outsideEditCollectionModalClicked()"
+    >
+      <ng-container *ngIf="!deleteCollectionView">
+        <h1>Edit Collection</h1>
+        <form [formGroup]="editCollectionForm">
+          <input
+            class="code-modal__text"
+            formControlName="collectionName"
+            #collectionNameInput
+          />
+          <div class="code-modal__button-actions">
+            <button
+              class="highlight"
+              type="submit"
+              (click)="saveEditCollection(collection)"
+            >
+              Save
+            </button>
+            <button
+              class="no-highlight"
+              type="button"
+              (click)="hideAndResetEditCollectionModal()"
+            >
+              Abort
+            </button>
+          </div>
+        </form>
+        <div class="collection-detail__delete-collection">
+          <button (click)="showDeleteCollectionView()">
+            Delete Collection
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="deleteCollectionView">
+        <h3 class="warn">Do you really want to delete this collection?</h3>
+        <div class="code-modal__button-actions">
+          <button class="no-highlight" (click)="deleteCollection(collection)">
+            Yes Delete!
+          </button>
+          <button
+            class="highlight"
             type="button"
             (click)="hideAndResetEditCollectionModal()"
           >
             Abort
           </button>
         </div>
-      </form>
-      <div class="collection-detail__delete-collection">
-        <button (click)="showDeleteCollectionView()">Delete Collection</button>
-      </div>
-    </ng-container>
-
-    <ng-container *ngIf="deleteCollectionView">
-      <h3 class="warn">Do you really want to delete this collection?</h3>
-      <div class="code-modal__button-actions">
-        <button class="no-highlight" (click)="deleteCollection(collection)">
-          Yes Delete!
-        </button>
-        <button
-          class="highlight"
-          type="button"
-          (click)="hideAndResetEditCollectionModal()"
-        >
-          Abort
-        </button>
-      </div>
-    </ng-container>
-  </code-modal>
+      </ng-container>
+    </code-modal>
+  </ng-container>
+  <loading [loading]="loading && !initError"></loading>
+  <error
+    [error]="initError"
+    msg="A problem occured while loading your collection!"
+  ></error>
 </div>
-
-<error
-  [error]="initError"
-  msg="A problem occured while loading your collection!"
-></error>
 
 <toaster
   [(visible)]="snipAddError"

@@ -44,6 +44,7 @@
     z-index: 1000;
   }
   &__inner {
+    position: relative;
     background: #fff;
     width: 400px;
     padding: 20px;

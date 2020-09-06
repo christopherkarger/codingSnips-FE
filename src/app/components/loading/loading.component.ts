@@ -11,4 +11,7 @@ export class LoadingComponent {
 
   @Input()
   white?: boolean;
+
+  @Input()
+  overlay?: boolean;
 }

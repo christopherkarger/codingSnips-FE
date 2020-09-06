@@ -12,6 +12,7 @@ import { tap, catchError } from "rxjs/operators";
 })
 export class SnipComponent implements OnInit, OnDestroy {
   initError = false;
+  loading = false;
   deleteSnipModalVisible = false;
   snipUpdateError = false;
   snipDeleteError = false;
@@ -34,14 +35,18 @@ export class SnipComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
+      this.loading = true;
+
       this.snip$ = this.snipsService
         .getAllSnipDetailsFromCollection(routeParams.id)
         .pipe(
           tap(() => {
             this.initError = false;
+            this.loading = false;
           }),
           catchError((err) => {
             this.initError = true;
+            this.loading = false;
             throw err;
           })
         );

@@ -3,7 +3,7 @@
     <h1>My Collections</h1>
 
     <button
-      *ngIf="!loading"
+      *ngIf="!initLoading"
       title="Add list"
       class="add-list"
       (click)="showModal()"
@@ -13,11 +13,11 @@
   </div>
 
   <error
-    [error]="error"
+    [error]="initError"
     msg="A problem occured while loading your lists"
   ></error>
 
-  <loading [loading]="loading && !error" [white]="true"></loading>
+  <loading [loading]="initLoading && !initError" [white]="true"></loading>
 
   <ul class="collections-sidebar__items">
     <li *ngFor="let item of allCollections$ | async">
@@ -50,6 +50,7 @@
       </button>
     </div>
   </form>
+  <loading [loading]="createLoading" [overlay]="true"></loading>
 </code-modal>
 
 <toaster

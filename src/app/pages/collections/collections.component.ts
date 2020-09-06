@@ -13,7 +13,7 @@ import {
 } from "@angular/forms";
 import { CollectionsService } from "../../services/collections.service";
 import { Observable, throwError } from "rxjs";
-import { tap, catchError } from "rxjs/operators";
+import { tap, catchError, finalize } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ISnipCollection } from "../../graphql/model/collections";
 
@@ -29,8 +29,9 @@ export class CollectionsComponent implements OnInit {
   collectionAddError = false;
   newCodeListForm: FormGroup;
   allCollections$?: Observable<ISnipCollection[] | undefined>;
-  loading?: boolean;
-  error?: boolean;
+  createLoading = false;
+  initLoading = false;
+  initError = false;
 
   constructor(
     private router: Router,
@@ -43,18 +44,18 @@ export class CollectionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loading = true;
+    this.initLoading = true;
     this.allCollections$ = this.collectionsService.getAllCollections().pipe(
       tap((res) => {
-        this.loading = false;
-        this.error = false;
+        this.initError = false;
+        this.initLoading = false;
         if (res[0]) {
           this.router.navigate(["/collections", res[0]._id]);
         }
       }),
       catchError((err) => {
-        this.error = true;
-        this.loading = false;
+        this.initLoading = false;
+        this.initError = true;
         return throwError(err);
       })
     );
@@ -85,19 +86,22 @@ export class CollectionsComponent implements OnInit {
   saveNewCollection(): void {
     const input = this.newCodeListForm.get("collectionName");
     if (input) {
+      this.createLoading = true;
       this.collectionsService.saveNewCollection(input.value).subscribe({
         next: () => {
+          this.createLoading = false;
           this.collectionAddError = false;
+          this.hideModal();
+          this.resetForm();
         },
         error: () => {
+          this.createLoading = false;
           this.collectionAddError = true;
         },
       });
     } else {
       throw new Error("codeListName not set");
     }
-    this.hideModal();
-    this.resetForm();
   }
 
   abortNewCollection(): void {

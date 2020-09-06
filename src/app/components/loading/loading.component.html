@@ -1,7 +1,13 @@
-<div class="spinner" *ngIf="loading" [class.white]="white">
+<div
+  class="spinner"
+  *ngIf="loading"
+  [class.white]="white"
+  [class.overlay]="overlay"
+>
   <div class="rect1"></div>
   <div class="rect2"></div>
   <div class="rect3"></div>
   <div class="rect4"></div>
   <div class="rect5"></div>
 </div>
+<div class="bg" *ngIf="loading && overlay"></div>
