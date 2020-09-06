@@ -40,3 +40,16 @@ export const updateSnipMutation = gql`
     }
   }
 `;
+
+export const deleteSnipMutation = gql`
+  mutation deleteSnip($snipId: String!) {
+    deleteSnip(snipId: $snipId) {
+      _id
+      text
+      title
+      snipsCollection {
+        _id
+      }
+    }
+  }
+`;

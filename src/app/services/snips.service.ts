@@ -10,19 +10,24 @@ import {
   SnipDetailsQuery,
   ISnipDetails,
   UpdateSnipMutation,
+  DeleteSnipMutation,
 } from "../graphql/model/snips";
 import {
   createSnipMutation,
   snipsFromCollectionQuery,
   snipDetailsQuery,
   updateSnipMutation,
+  deleteSnipMutation,
 } from "../graphql/gql/snips";
+import { ISnipCollection } from "../graphql/model/collections";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
 })
 export class SnipsService {
   constructor(
+    private router: Router,
     private graphQlService: GraphQlService,
     private authService: AuthService
   ) {}
@@ -103,6 +108,43 @@ export class SnipsService {
       .pipe(
         map((result) => {
           return result.data?.updateSnip;
+        })
+      );
+  }
+
+  deleteSnip(snipId: string): Observable<ISnipDetails> {
+    return this.graphQlService
+      .mutate<DeleteSnipMutation, ISnipDetails>(deleteSnipMutation, {
+        snipId,
+      })
+      .pipe(
+        map((result) => {
+          if (result.data) {
+            const data = this.graphQlService.readQuery<
+              SnipsFromCollectionQuery
+            >(snipsFromCollectionQuery, {
+              collectionId: result.data.deleteSnip.snipsCollection._id,
+            });
+            if (data) {
+              const newData = data.snipsFromCollection.filter(
+                (col: ISnip) => col._id !== snipId
+              );
+
+              this.graphQlService.writeQuery(
+                snipsFromCollectionQuery,
+                {
+                  snipsFromCollection: [...newData],
+                },
+                { collectionId: result.data.deleteSnip.snipsCollection._id }
+              );
+
+              this.router.navigate([
+                `/collections/${result.data.deleteSnip.snipsCollection._id}`,
+              ]);
+            }
+          }
+
+          return result.data?.deleteSnip;
         })
       );
   }

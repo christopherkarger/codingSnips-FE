@@ -24,3 +24,7 @@ export type SnipDetailsQuery = {
 export type UpdateSnipMutation = {
   updateSnip: ISnipDetails;
 };
+
+export type DeleteSnipMutation = {
+  deleteSnip: ISnipDetails;
+};

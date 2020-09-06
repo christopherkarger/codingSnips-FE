@@ -16,6 +16,9 @@
 
   &__actions {
     margin-left: auto;
+    button + button {
+      margin-left: 10px;
+    }
   }
 }
 

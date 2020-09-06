@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
-import { ISnipDetails } from "src/app/graphql/model/snips";
+import { ISnipDetails, ISnip } from "src/app/graphql/model/snips";
 import { SnipsService } from "src/app/services/snips.service";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 
@@ -10,6 +10,7 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
   styleUrls: ["./snip.component.scss"],
 })
 export class SnipComponent implements OnInit, OnDestroy {
+  deleteSnipModalVisible = false;
   snipUpdateError = false;
   editSnipForm: FormGroup;
   editSnipModalVisible = false;
@@ -49,7 +50,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.editSnipModalVisible = false;
   }
 
-  outsideSnipModalClicked(): void {
+  outsideEditSnipModalClicked(): void {
     this.abortEditSnip();
   }
 
@@ -83,5 +84,28 @@ export class SnipComponent implements OnInit, OnDestroy {
 
   abortEditSnip(): void {
     this.hideEditSnipModal();
+  }
+
+  private showDeleteSnipModal(): void {
+    this.deleteSnipModalVisible = true;
+  }
+
+  hideDeleteSnipModal(): void {
+    this.deleteSnipModalVisible = false;
+  }
+
+  deleteSnip(): void {
+    this.showDeleteSnipModal();
+  }
+
+  deleteSnipRequest(snip: ISnipDetails) {
+    this.snipService.deleteSnip(snip._id).subscribe({
+      next: () => {
+        this.hideDeleteSnipModal();
+      },
+      error: (err) => {
+        throw err;
+      },
+    });
   }
 }
