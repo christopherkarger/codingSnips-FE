@@ -113,6 +113,11 @@
   </code-modal>
 </div>
 
+<error
+  [error]="initError"
+  msg="A problem occured while loading your collection!"
+></error>
+
 <toaster
   [(visible)]="snipAddError"
   msg="Could not add Snip! Please try again later."

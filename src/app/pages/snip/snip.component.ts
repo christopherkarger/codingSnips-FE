@@ -4,14 +4,17 @@ import { ActivatedRoute } from "@angular/router";
 import { ISnipDetails, ISnip } from "src/app/graphql/model/snips";
 import { SnipsService } from "src/app/services/snips.service";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import { tap, catchError } from "rxjs/operators";
 
 @Component({
   templateUrl: "./snip.component.html",
   styleUrls: ["./snip.component.scss"],
 })
 export class SnipComponent implements OnInit, OnDestroy {
+  initError = false;
   deleteSnipModalVisible = false;
   snipUpdateError = false;
+  snipDeleteError = false;
   editSnipForm: FormGroup;
   editSnipModalVisible = false;
   routeSub$?: Subscription;
@@ -31,9 +34,17 @@ export class SnipComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
-      this.snip$ = this.snipsService.getAllSnipDetailsFromCollection(
-        routeParams.id
-      );
+      this.snip$ = this.snipsService
+        .getAllSnipDetailsFromCollection(routeParams.id)
+        .pipe(
+          tap(() => {
+            this.initError = false;
+          }),
+          catchError((err) => {
+            this.initError = true;
+            throw err;
+          })
+        );
     });
   }
   ngOnDestroy(): void {
@@ -76,6 +87,7 @@ export class SnipComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.snipUpdateError = true;
+            this.hideEditSnipModal();
             throw err;
           },
         });
@@ -101,9 +113,12 @@ export class SnipComponent implements OnInit, OnDestroy {
   deleteSnipRequest(snip: ISnipDetails) {
     this.snipService.deleteSnip(snip._id).subscribe({
       next: () => {
+        this.snipDeleteError = false;
         this.hideDeleteSnipModal();
       },
       error: (err) => {
+        this.snipDeleteError = true;
+        this.hideDeleteSnipModal();
         throw err;
       },
     });

@@ -46,3 +46,18 @@
     </form>
   </code-modal>
 </div>
+
+<error
+  [error]="initError"
+  msg="A problem occured while loading your Snippet!"
+></error>
+
+<toaster
+  [(visible)]="snipUpdateError"
+  msg="Could not edit your Snippet! Please try again later."
+></toaster>
+
+<toaster
+  [(visible)]="snipDeleteError"
+  msg="Could not delete your Snippet! Please try again later."
+></toaster>

@@ -15,14 +15,16 @@ import { CollectionsService } from "../../services/collections.service";
 import { ISnip } from "../../graphql/model/snips";
 import { ISnipCollection } from "../../graphql/model/collections";
 import { SnipsService } from "../../services/snips.service";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, empty } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import { catchError, tap } from "rxjs/operators";
 
 @Component({
   templateUrl: "./collection-details.component.html",
   styleUrls: ["./collection-details.component.scss"],
 })
 export class CollectionDetailsComponent implements OnInit, OnDestroy {
+  initError = false;
   deleteCollectionView = false;
   collectionUpdateError = false;
   snipAddError = false;
@@ -65,9 +67,17 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
-      this.collection$ = this.collectionService.getCollectionDetails(
-        routeParams.id
-      );
+      this.collection$ = this.collectionService
+        .getCollectionDetails(routeParams.id)
+        .pipe(
+          tap(() => {
+            this.initError = false;
+          }),
+          catchError((err) => {
+            this.initError = true;
+            throw err;
+          })
+        );
 
       this.collectionDetail$ = this.snipsService.getSnipsFromCollection(
         routeParams.id
