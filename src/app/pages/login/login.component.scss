@@ -1,0 +1,62 @@
+@import "../../../variables.scss";
+:host {
+  display: contents;
+}
+
+.login-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: $mainColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__inner {
+    width: 300px;
+  }
+}
+
+input {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.login {
+  width: 100%;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+  background: $textColor;
+  font-weight: bold;
+  height: 40px;
+  font-size: 16px;
+  text-transform: uppercase;
+  border: 2px solid $textColor;
+  &:hover {
+    background: #fff;
+    color: $textColor;
+  }
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 30px;
+  span {
+    display: block;
+    color: #fff;
+  }
+
+  &__icon {
+    font-size: 70px;
+    margin-bottom: 10px;
+  }
+
+  &__text {
+    font-size: 30px;
+    font-weight: bold;
+  }
+}

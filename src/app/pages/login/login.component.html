@@ -1,17 +1,32 @@
-<ng-container *ngIf="loading">Lade...</ng-container>
-<ng-container *ngIf="error">Error</ng-container>
-<form [formGroup]="formGroup">
-  <input
-    type="text"
-    name="email"
-    placeholder="Email"
-    formControlName="email"
-  /><br />
-  <input
-    type="password"
-    name="password"
-    placeholder="Password"
-    formControlName="password"
-  /><br />
-  <button type="button" (click)="login()" [disabled]="loading">Login</button>
-</form>
+<div class="login-wrapper">
+  <div class="login-wrapper__inner">
+    <div class="logo">
+      <span class="logo__icon">{{ "{ " + "🍺" + " }" }}</span>
+      <span class="logo__text">Coding Snips</span>
+    </div>
+    <form [formGroup]="formGroup">
+      <input
+        type="text"
+        name="email"
+        placeholder="Email"
+        formControlName="email"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        formControlName="password"
+      />
+      <button
+        class="login"
+        type="button"
+        (click)="login()"
+        [disabled]="loading"
+      >
+        Login
+      </button>
+    </form>
+    <ng-container *ngIf="loading">Lade...</ng-container>
+    <ng-container *ngIf="error">Error</ng-container>
+  </div>
+</div>

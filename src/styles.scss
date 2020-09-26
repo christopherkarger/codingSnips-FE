@@ -52,6 +52,7 @@ button {
 
 input {
   padding: 5px 8px;
+  box-sizing: border-box;
   &:focus {
     border: 0;
     outline: 0;
