@@ -15,7 +15,8 @@ import { CollectionsService } from "../../services/collections.service";
 import { Observable, throwError } from "rxjs";
 import { tap, catchError, finalize } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { ISnipCollection } from "../../graphql/model/collections";
+import { ISnipsCollection } from "../../graphql/model/collections";
+import { SnipsCollections } from "./models/snipscollectons";
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -28,7 +29,7 @@ export class CollectionsComponent implements OnInit {
   modalVisible = false;
   collectionAddError = false;
   newCodeListForm: FormGroup;
-  allCollections$?: Observable<ISnipCollection[] | undefined>;
+  allCollections$?: Observable<SnipsCollections | undefined>;
   createLoading = false;
   initLoading = false;
   initError = false;
@@ -49,8 +50,8 @@ export class CollectionsComponent implements OnInit {
       tap((res) => {
         this.initError = false;
         this.initLoading = false;
-        if (res[0]) {
-          this.router.navigate(["/collections", res[0]._id]);
+        if (res.snipsCollection[0]) {
+          this.router.navigate(["/collections", res.snipsCollection[0]._id]);
         }
       }),
       catchError((err) => {

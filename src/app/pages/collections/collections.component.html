@@ -19,8 +19,11 @@
 
   <loading [loading]="initLoading && !initError" [white]="true"></loading>
 
-  <ul class="collections-sidebar__items">
-    <li *ngFor="let item of allCollections$ | async">
+  <ul
+    class="collections-sidebar__items"
+    *ngIf="allCollections$ | async as allCollections"
+  >
+    <li *ngFor="let item of allCollections.snipsCollection">
       <button [routerLink]="item._id" routerLinkActive="active-link">
         {{ item.title }}
       </button>

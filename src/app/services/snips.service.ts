@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { AuthService } from "./auth.service";
 import { map } from "rxjs/operators";
 import { GraphQlService } from "./graphql.service";
 import {
@@ -19,29 +18,26 @@ import {
   updateSnipMutation,
   deleteSnipMutation,
 } from "../graphql/gql/snips";
-import { ISnipCollection } from "../graphql/model/collections";
 import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
 })
 export class SnipsService {
-  constructor(
-    private router: Router,
-    private graphQlService: GraphQlService,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private graphQlService: GraphQlService) {}
 
   addSnip(
     collectionId: string,
     title: string,
-    text: string
+    text: string,
+    language: string
   ): Observable<ISnip | undefined> {
     return this.graphQlService
       .mutate<CreateSnipMutation, ISnip>(createSnipMutation, {
         collectionId,
         title,
         text,
+        language,
       })
       .pipe(
         map((result) => {
@@ -97,13 +93,15 @@ export class SnipsService {
   updateSnip(
     snipId: string,
     title: string,
-    text: string
+    text: string,
+    language: string
   ): Observable<ISnipDetails> {
     return this.graphQlService
       .mutate<UpdateSnipMutation, ISnipDetails>(updateSnipMutation, {
         snipId,
         title,
         text,
+        language,
       })
       .pipe(
         map((result) => {

@@ -12,7 +12,8 @@
         </button>
       </div>
     </div>
-    <p>{{ snip.text }}</p>
+    <div class="snip__language">{{ snip.language }}</div>
+    <pre>{{ snip.text }}</pre>
     <code-modal
       [visible]="deleteSnipModalVisible"
       (outsideClicked)="hideDeleteSnipModal()"
@@ -34,8 +35,19 @@
     >
       <h1>Edit your Snippet</h1>
       <form [formGroup]="editSnipForm">
-        <input class="code-modal__text" formControlName="snipTitle" />
-        <input class="code-modal__text" formControlName="snipText" />
+        <div class="flex">
+          <input class="code-modal__text" formControlName="snipTitle" />
+          <select class="language-select" formControlName="snipLanguage">
+            <option *ngFor="let option of codeLanguages" [value]="option">
+              {{ option }}
+            </option>
+          </select>
+        </div>
+        <textarea
+          class="snippet-area"
+          formControlName="snipText"
+          placeholder="Put your Code Snippet in here..."
+        ></textarea>
         <div class="code-modal__button-actions">
           <button class="highlight" type="submit" (click)="saveEditSnip(snip)">
             Save

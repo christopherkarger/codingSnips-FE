@@ -34,20 +34,27 @@
     >
       <h1>Add new Snippet</h1>
       <form [formGroup]="addSnipForm">
-        <input
-          class="code-modal__text"
-          type="text"
-          formControlName="snipTitle"
-          placeholder="Title"
-          #snipNameInput
-        />
+        <div class="flex">
+          <input
+            class="code-modal__text"
+            type="text"
+            formControlName="snipTitle"
+            placeholder="Title"
+            #snipNameInput
+          />
+          <select class="language-select" formControlName="snipLanguage">
+            <option disabled value>Sprache</option>
+            <option *ngFor="let option of codeLanguages" [value]="option">
+              {{ option }}
+            </option>
+          </select>
+        </div>
 
-        <input
-          class="code-modal__text"
-          type="text"
+        <textarea
+          class="snippet-area"
           formControlName="snipText"
-          placeholder="Text"
-        />
+          placeholder="Put your Code Snippet in here..."
+        ></textarea>
 
         <div class="code-modal__button-actions">
           <button class="highlight" type="submit" (click)="addSnip(collection)">

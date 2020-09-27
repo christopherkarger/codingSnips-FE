@@ -7,6 +7,7 @@ export interface ISnipDetails {
   _id: string;
   title: string;
   text: string;
+  language: string;
 }
 
 export type CreateSnipMutation = {

@@ -1,13 +1,24 @@
 import gql from "graphql-tag";
 
 export const createSnipMutation = gql`
-  mutation createSnip($collectionId: String!, $text: String!, $title: String!) {
+  mutation createSnip(
+    $collectionId: String!
+    $text: String!
+    $title: String!
+    $language: String!
+  ) {
     createSnip(
-      snipInput: { collectionId: $collectionId, title: $title, text: $text }
+      snipInput: {
+        collectionId: $collectionId
+        title: $title
+        text: $text
+        language: $language
+      }
     ) {
       _id
       title
       text
+      language
     }
   }
 `;
@@ -27,16 +38,30 @@ export const snipDetailsQuery = gql`
       _id
       title
       text
+      language
     }
   }
 `;
 
 export const updateSnipMutation = gql`
-  mutation updateSnip($snipId: String!, $text: String!, $title: String!) {
-    updateSnip(snipInput: { snipId: $snipId, title: $title, text: $text }) {
+  mutation updateSnip(
+    $snipId: String!
+    $text: String!
+    $title: String!
+    $language: String!
+  ) {
+    updateSnip(
+      snipInput: {
+        snipId: $snipId
+        title: $title
+        text: $text
+        language: $language
+      }
+    ) {
       _id
       text
       title
+      language
     }
   }
 `;
@@ -47,6 +72,7 @@ export const deleteSnipMutation = gql`
       _id
       text
       title
+      language
       snipsCollection {
         _id
       }

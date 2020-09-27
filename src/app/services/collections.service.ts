@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "./auth.service";
 import { GraphQlService } from "./graphql.service";
 import {
-  ISnipCollection,
+  ISnipsCollection,
   SnipsCollectionByIdQuery,
   AllSnipsCollectionsQuery,
   UpdateSnipsCollectionNameMutation,
@@ -19,6 +19,7 @@ import {
   createSnipsCollectionMutation,
   deleteSnipsCollectionMutation,
 } from "../graphql/gql/collections";
+import { SnipsCollections } from "../pages/collections/models/snipscollectons";
 
 @Injectable({
   providedIn: "root",
@@ -40,7 +41,7 @@ export class CollectionsService {
     private authService: AuthService
   ) {}
 
-  getCollectionDetails(collectionId: string): Observable<ISnipCollection> {
+  getCollectionDetails(collectionId: string): Observable<ISnipsCollection> {
     return this.graphQlService
       .watchQuery<SnipsCollectionByIdQuery>(snipsCollectionByIdQuery, {
         collectionId,
@@ -52,13 +53,15 @@ export class CollectionsService {
       );
   }
 
-  getAllCollections(): Observable<ISnipCollection[]> {
+  getAllCollections(): Observable<SnipsCollections> {
     return this.graphQlService
       .watchQuery<AllSnipsCollectionsQuery>(allSnipsCollectionsQuery)
       .pipe(
         map((result) => {
           this.collectionsLoaded = true;
-          return result.data.snipsCollections;
+          return new SnipsCollections({
+            snipsCollection: result.data.snipsCollections,
+          });
         })
       );
   }
@@ -66,9 +69,9 @@ export class CollectionsService {
   updateCollection(
     collectionId: string,
     title: string
-  ): Observable<ISnipCollection | undefined> {
+  ): Observable<ISnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<UpdateSnipsCollectionNameMutation, ISnipCollection>(
+      .mutate<UpdateSnipsCollectionNameMutation, ISnipsCollection>(
         updateSnipsCollectionNameMutation,
         {
           collectionId,
@@ -82,9 +85,9 @@ export class CollectionsService {
       );
   }
 
-  saveNewCollection(title: string): Observable<ISnipCollection | undefined> {
+  saveNewCollection(title: string): Observable<ISnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<CreateSnipsCollectionMutation, ISnipCollection>(
+      .mutate<CreateSnipsCollectionMutation, ISnipsCollection>(
         createSnipsCollectionMutation,
         { title }
       )
@@ -113,10 +116,10 @@ export class CollectionsService {
   }
 
   deleteCollection(
-    collection: ISnipCollection
-  ): Observable<ISnipCollection | undefined> {
+    collection: ISnipsCollection
+  ): Observable<ISnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<DeleteSnipsCollectionMutation, ISnipCollection>(
+      .mutate<DeleteSnipsCollectionMutation, ISnipsCollection>(
         deleteSnipsCollectionMutation,
         { collectionId: collection._id }
       )
@@ -129,7 +132,7 @@ export class CollectionsService {
 
             if (data) {
               const newData = data.snipsCollections.filter(
-                (col: ISnipCollection) => col._id !== collection._id
+                (col: ISnipsCollection) => col._id !== collection._id
               );
 
               if (newData.length === 0) {

@@ -13,17 +13,19 @@ import {
 } from "@angular/router";
 import { CollectionsService } from "../../services/collections.service";
 import { ISnip } from "../../graphql/model/snips";
-import { ISnipCollection } from "../../graphql/model/collections";
+import { ISnipsCollection } from "../../graphql/model/collections";
 import { SnipsService } from "../../services/snips.service";
 import { Observable, Subscription, empty } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { catchError, tap } from "rxjs/operators";
+import { codeLanguages } from "src/app/constants";
 
 @Component({
   templateUrl: "./collection-details.component.html",
   styleUrls: ["./collection-details.component.scss"],
 })
 export class CollectionDetailsComponent implements OnInit, OnDestroy {
+  codeLanguages = codeLanguages;
   initError = false;
   loading = false;
   deleteCollectionView = false;
@@ -40,7 +42,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
   addSnipForm: FormGroup;
   editCollectionModalVisible = false;
   addSnipModalVisible = false;
-  collection$?: Observable<ISnipCollection>;
+  collection$?: Observable<ISnipsCollection>;
   routeSub$?: Subscription;
 
   @ViewChild("routerOutlet")
@@ -63,6 +65,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.addSnipForm = this.fb.group({
       snipTitle: new FormControl(""),
       snipText: new FormControl(""),
+      snipLanguage: new FormControl(""),
     });
   }
 
@@ -104,7 +107,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.hideAndResetEditCollectionModal();
   }
 
-  editCollection(collection: ISnipCollection): void {
+  editCollection(collection: ISnipsCollection): void {
     if (this.collectionNameInput) {
       this.collectionNameInput.nativeElement.focus();
     }
@@ -115,7 +118,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.editCollectionModalVisible = true;
   }
 
-  saveEditCollection(collection: ISnipCollection): void {
+  saveEditCollection(collection: ISnipsCollection): void {
     const input = this.editCollectionForm.get("collectionName");
 
     if (input) {
@@ -147,7 +150,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.deleteCollectionView = true;
   }
 
-  deleteCollection(collection: ISnipCollection): void {
+  deleteCollection(collection: ISnipsCollection): void {
     this.collectionService.deleteCollection(collection).subscribe({
       next: () => {
         this.collectionUpdateError = false;
@@ -169,6 +172,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.addSnipForm.patchValue({
       snipTitle: "",
       snipText: "",
+      snipLanguage: "",
     });
   }
 
@@ -183,13 +187,19 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  addSnip(collection: ISnipCollection): void {
+  addSnip(collection: ISnipsCollection): void {
     const snipTitle = this.addSnipForm.get("snipTitle");
     const snipText = this.addSnipForm.get("snipText");
+    const snipLanguage = this.addSnipForm.get("snipLanguage");
 
-    if (snipTitle && snipText) {
+    if (snipTitle && snipText && snipLanguage) {
       this.snipsService
-        .addSnip(collection._id, snipTitle.value, snipText.value)
+        .addSnip(
+          collection._id,
+          snipTitle.value,
+          snipText.value,
+          snipLanguage.value
+        )
         .subscribe({
           next: () => {
             this.snipAddError = false;

@@ -81,3 +81,28 @@ ul {
   margin: 0;
   list-style: none;
 }
+
+.flex {
+  display: flex;
+}
+
+.language-select {
+  border: 1px solid $color2;
+  height: 40px;
+  box-sizing: border-box;
+  outline: none;
+  margin-left: 20px;
+  width: 200px;
+}
+
+.snippet-area {
+  width: 100%;
+  line-height: 1.6em;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 300px;
+  border: 1px solid $color2;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+}

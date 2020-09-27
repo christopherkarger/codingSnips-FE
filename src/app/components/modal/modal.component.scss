@@ -71,3 +71,13 @@
     opacity: 1;
   }
 }
+
+.code-modal__snippet {
+  width: 100%;
+  max-width: 100%;
+  min-height: 300px;
+  border: 1px solid $color2;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+}

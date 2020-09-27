@@ -5,12 +5,14 @@ import { ISnipDetails, ISnip } from "src/app/graphql/model/snips";
 import { SnipsService } from "src/app/services/snips.service";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { tap, catchError } from "rxjs/operators";
+import { codeLanguages } from "src/app/constants";
 
 @Component({
   templateUrl: "./snip.component.html",
   styleUrls: ["./snip.component.scss"],
 })
 export class SnipComponent implements OnInit, OnDestroy {
+  codeLanguages = codeLanguages;
   initError = false;
   loading = false;
   deleteSnipModalVisible = false;
@@ -30,6 +32,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.editSnipForm = this.fb.group({
       snipTitle: new FormControl(""),
       snipText: new FormControl(""),
+      snipLanguage: new FormControl(""),
     });
   }
 
@@ -74,6 +77,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.editSnipForm.patchValue({
       snipTitle: snip.title,
       snipText: snip.text,
+      snipLanguage: snip.language,
     });
     this.showEditSnipModal();
   }
@@ -81,10 +85,16 @@ export class SnipComponent implements OnInit, OnDestroy {
   saveEditSnip(snip: ISnipDetails): void {
     const snipTitle = this.editSnipForm.get("snipTitle");
     const snipText = this.editSnipForm.get("snipText");
+    const snipLanguage = this.editSnipForm.get("snipLanguage");
 
-    if (snipTitle && snipText) {
+    if (snipTitle && snipText && snipLanguage) {
       this.snipService
-        .updateSnip(snip._id, snipTitle.value, snipText.value)
+        .updateSnip(
+          snip._id,
+          snipTitle.value,
+          snipText.value,
+          snipLanguage.value
+        )
         .subscribe({
           next: () => {
             this.snipUpdateError = false;

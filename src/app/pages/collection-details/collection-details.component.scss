@@ -1,6 +1,9 @@
 @import "../../../variables.scss";
 :host {
   display: contents;
+  & ::ng-deep .code-modal__inner {
+    width: 600px;
+  }
 }
 .collection-detail {
   height: 100vh;
