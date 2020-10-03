@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
-import { ISnipDetails, ISnip } from "src/app/graphql/model/snips";
 import { SnipsService } from "src/app/services/snips.service";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { tap, catchError } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
+import { SnipDetails } from "./models/snip-details";
 
 @Component({
   templateUrl: "./snip.component.html",
@@ -21,7 +21,7 @@ export class SnipComponent implements OnInit, OnDestroy {
   editSnipForm: FormGroup;
   editSnipModalVisible = false;
   routeSub$?: Subscription;
-  snip$?: Observable<ISnipDetails>;
+  snipDetails$?: Observable<SnipDetails>;
 
   constructor(
     private snipService: SnipsService,
@@ -40,7 +40,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
       this.loading = true;
 
-      this.snip$ = this.snipsService
+      this.snipDetails$ = this.snipsService
         .getAllSnipDetailsFromCollection(routeParams.id)
         .pipe(
           tap(() => {
@@ -73,7 +73,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.abortEditSnip();
   }
 
-  editSnip(snip: ISnipDetails): void {
+  editSnip(snip: SnipDetails): void {
     this.editSnipForm.patchValue({
       snipTitle: snip.title,
       snipText: snip.text,
@@ -82,7 +82,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.showEditSnipModal();
   }
 
-  saveEditSnip(snip: ISnipDetails): void {
+  saveEditSnip(snip: SnipDetails): void {
     const snipTitle = this.editSnipForm.get("snipTitle");
     const snipText = this.editSnipForm.get("snipText");
     const snipLanguage = this.editSnipForm.get("snipLanguage");
@@ -125,7 +125,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.showDeleteSnipModal();
   }
 
-  deleteSnipRequest(snip: ISnipDetails) {
+  deleteSnipRequest(snip: SnipDetails) {
     this.snipService.deleteSnip(snip._id).subscribe({
       next: () => {
         this.snipDeleteError = false;

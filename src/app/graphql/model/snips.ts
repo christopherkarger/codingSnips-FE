@@ -1,3 +1,5 @@
+import { SnipsCollection } from "../../pages/collection-details/models/snipscollection";
+
 export interface ISnip {
   _id: string;
   title: string;
@@ -8,6 +10,7 @@ export interface ISnipDetails {
   title: string;
   text: string;
   language: string;
+  snipsCollection: SnipsCollection;
 }
 
 export type CreateSnipMutation = {

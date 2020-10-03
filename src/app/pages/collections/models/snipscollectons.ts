@@ -1,4 +1,4 @@
-import { SnipsCollection } from "./snipscollection";
+import { SnipsCollection } from "../../collection-details/models/snipscollection";
 
 interface ISnipsCollections {
   snipsCollection: SnipsCollection[];

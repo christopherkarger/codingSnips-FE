@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -29,7 +23,7 @@ export class CollectionsComponent implements OnInit {
   modalVisible = false;
   collectionAddError = false;
   newCodeListForm: FormGroup;
-  allCollections$?: Observable<SnipsCollections | undefined>;
+  allCollections$?: Observable<SnipsCollections>;
   createLoading = false;
   initLoading = false;
   initError = false;

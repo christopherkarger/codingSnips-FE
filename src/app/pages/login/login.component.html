@@ -26,7 +26,7 @@
         Login
       </button>
     </form>
-    <ng-container *ngIf="loading">Lade...</ng-container>
-    <ng-container *ngIf="error">Error</ng-container>
+    <loading [loading]="!loading" [white]="true"></loading>
+    <ng-container *ngIf="error">Login Error</ng-container>
   </div>
 </div>

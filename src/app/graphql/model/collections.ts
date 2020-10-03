@@ -1,7 +1,9 @@
+import { ISnip } from "./snips";
+
 export interface ISnipsCollection {
   _id: string;
   title: string;
-  snips?: any[];
+  snips?: ISnip[];
 }
 
 export type SnipsCollectionByIdQuery = {

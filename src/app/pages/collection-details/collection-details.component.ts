@@ -19,6 +19,8 @@ import { Observable, Subscription, empty } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { catchError, tap } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
+import { SnipsCollection } from "./models/snipscollection";
+import { Snip } from "../snip/models/snip";
 
 @Component({
   templateUrl: "./collection-details.component.html",
@@ -42,13 +44,13 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
   addSnipForm: FormGroup;
   editCollectionModalVisible = false;
   addSnipModalVisible = false;
-  collection$?: Observable<ISnipsCollection>;
+  collection$?: Observable<SnipsCollection>;
   routeSub$?: Subscription;
 
   @ViewChild("routerOutlet")
   outlet?: RouterOutlet;
 
-  collectionDetail$?: Observable<ISnip[]>;
+  collectionDetail$?: Observable<Snip[]>;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -107,7 +109,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.hideAndResetEditCollectionModal();
   }
 
-  editCollection(collection: ISnipsCollection): void {
+  editCollection(collection: SnipsCollection): void {
     if (this.collectionNameInput) {
       this.collectionNameInput.nativeElement.focus();
     }
@@ -118,7 +120,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.editCollectionModalVisible = true;
   }
 
-  saveEditCollection(collection: ISnipsCollection): void {
+  saveEditCollection(collection: SnipsCollection): void {
     const input = this.editCollectionForm.get("collectionName");
 
     if (input) {
@@ -150,7 +152,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.deleteCollectionView = true;
   }
 
-  deleteCollection(collection: ISnipsCollection): void {
+  deleteCollection(collection: SnipsCollection): void {
     this.collectionService.deleteCollection(collection).subscribe({
       next: () => {
         this.collectionUpdateError = false;
@@ -187,7 +189,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  addSnip(collection: ISnipsCollection): void {
+  addSnip(collection: SnipsCollection): void {
     const snipTitle = this.addSnipForm.get("snipTitle");
     const snipText = this.addSnipForm.get("snipText");
     const snipLanguage = this.addSnipForm.get("snipLanguage");

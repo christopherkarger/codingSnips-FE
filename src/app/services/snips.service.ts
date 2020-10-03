@@ -19,7 +19,9 @@ import {
   deleteSnipMutation,
 } from "../graphql/gql/snips";
 import { Router } from "@angular/router";
-
+import { SnipDetails } from "../pages/snip/models/snip-details";
+//import { SnipsCollection } from "../pages/collection-details/models/snipscollection";
+import { Snip } from "../pages/snip/models/snip";
 @Injectable({
   providedIn: "root",
 })
@@ -31,9 +33,9 @@ export class SnipsService {
     title: string,
     text: string,
     language: string
-  ): Observable<ISnip | undefined> {
+  ): Observable<Snip | undefined> {
     return this.graphQlService
-      .mutate<CreateSnipMutation, ISnip>(createSnipMutation, {
+      .mutate<CreateSnipMutation, Snip>(createSnipMutation, {
         collectionId,
         title,
         text,
@@ -59,33 +61,34 @@ export class SnipsService {
                 { collectionId }
               );
             }
+            return new Snip(result.data.createSnip);
           }
-
-          return result.data?.createSnip;
         })
       );
   }
 
-  getSnipsFromCollection(collectionId: string): Observable<ISnip[]> {
+  getSnipsFromCollection(collectionId: string): Observable<Snip[]> {
     return this.graphQlService
       .watchQuery<SnipsFromCollectionQuery>(snipsFromCollectionQuery, {
         collectionId,
       })
       .pipe(
         map((result) => {
-          return result.data.snipsFromCollection;
+          return result.data.snipsFromCollection.map((x) => {
+            return new Snip(x);
+          });
         })
       );
   }
 
-  getAllSnipDetailsFromCollection(snipId: string): Observable<ISnipDetails> {
+  getAllSnipDetailsFromCollection(snipId: string): Observable<SnipDetails> {
     return this.graphQlService
       .watchQuery<SnipDetailsQuery>(snipDetailsQuery, {
         snipId,
       })
       .pipe(
         map((result) => {
-          return result.data.snipDetails;
+          return new SnipDetails(result.data.snipDetails);
         })
       );
   }
@@ -95,9 +98,9 @@ export class SnipsService {
     title: string,
     text: string,
     language: string
-  ): Observable<ISnipDetails> {
+  ): Observable<SnipDetails | undefined> {
     return this.graphQlService
-      .mutate<UpdateSnipMutation, ISnipDetails>(updateSnipMutation, {
+      .mutate<UpdateSnipMutation, SnipDetails>(updateSnipMutation, {
         snipId,
         title,
         text,
@@ -105,14 +108,16 @@ export class SnipsService {
       })
       .pipe(
         map((result) => {
-          return result.data?.updateSnip;
+          if (result.data) {
+            return new SnipDetails(result.data.updateSnip);
+          }
         })
       );
   }
 
-  deleteSnip(snipId: string): Observable<ISnipDetails> {
+  deleteSnip(snipId: string): Observable<SnipDetails | undefined> {
     return this.graphQlService
-      .mutate<DeleteSnipMutation, ISnipDetails>(deleteSnipMutation, {
+      .mutate<DeleteSnipMutation, SnipDetails>(deleteSnipMutation, {
         snipId,
       })
       .pipe(
@@ -140,9 +145,8 @@ export class SnipsService {
                 `/collections/${result.data.deleteSnip.snipsCollection._id}`,
               ]);
             }
+            return new SnipDetails(result.data.deleteSnip);
           }
-
-          return result.data?.deleteSnip;
         })
       );
   }
