@@ -60,3 +60,15 @@ input {
     font-weight: bold;
   }
 }
+
+.loading-wrapper {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+p {
+  color: #fff;
+  margin: 1em 0;
+}

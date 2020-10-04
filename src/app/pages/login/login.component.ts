@@ -35,11 +35,12 @@ export class LoginComponent {
     const password = this.formGroup.get("password");
 
     if (this.formGroup.invalid || !email || !password) {
-      // TODO: Handle Error Handling
+      // TODO: Handle Form rrors
       return;
     }
 
     this.loading = true;
+
     this.authService.login(email.value, password.value).subscribe({
       next: (res) => {
         this.loading = false;

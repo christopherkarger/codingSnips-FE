@@ -26,7 +26,11 @@
         Login
       </button>
     </form>
-    <loading [loading]="!loading" [white]="true"></loading>
-    <ng-container *ngIf="error">Login Error</ng-container>
+
+    <div class="loading-wrapper">
+      <loading [loading]="loading" [white]="true"></loading>
+    </div>
+
+    <toaster [(visible)]="error" msg="Ups, Login Error"></toaster>
   </div>
 </div>
