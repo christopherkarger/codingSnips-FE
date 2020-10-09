@@ -6,6 +6,7 @@ import { AppComponent } from "./app.component";
 import { GraphQLModule } from "./graphql.module";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,7 +17,14 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     GraphQLModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HIGHLIGHT_OPTIONS,
+      useValue: {
+        fullLibraryLoader: () => import("highlight.js"),
+      },
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

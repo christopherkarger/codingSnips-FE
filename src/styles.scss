@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./variables.scss";
 @import "./normalize.scss";
+@import "~highlight.js/styles/atom-one-dark.css";
+
+.hljs {
+  padding: 20px;
+}
+
 * {
   margin: 0;
   padding: 0;

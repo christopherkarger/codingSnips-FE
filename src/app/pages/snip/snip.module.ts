@@ -5,6 +5,7 @@ import { SnipComponent } from "./snip.component";
 import { RouterModule, Routes } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { SharedComponentsModule } from "../../shared/shared-components.module";
+import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedComponentsModule,
+    HighlightModule,
   ],
   exports: [],
   providers: [],

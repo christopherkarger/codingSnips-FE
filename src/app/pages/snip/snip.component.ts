@@ -23,6 +23,11 @@ export class SnipComponent implements OnInit, OnDestroy {
   routeSub$?: Subscription;
   snipDetails$?: Observable<SnipDetails>;
 
+  code = `function myFunction() {
+    document.getElementById("demo1").innerHTML = "Hello there!";
+    document.getElementById("demo2").innerHTML = "How are you?";
+  }`;
+
   constructor(
     private snipService: SnipsService,
     private fb: FormBuilder,
