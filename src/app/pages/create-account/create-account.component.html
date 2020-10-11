@@ -33,8 +33,8 @@
     <button class="white mbt-20" routerLink="/login">Back to Login!</button>
 
 
-    <toaster [styling]="toasterStyle.Info" [visible]="createAccountSuccess" msg="Your account was created successfully"></toaster>
-    <toaster [styling]="toasterStyle.Error" [visible]="error" msg="Ups, create account error!"></toaster>
+    <toaster [styling]="toasterStyle.Info" [(visible)]="createAccountSuccess" msg="Your account was created successfully"></toaster>
+    <toaster [styling]="toasterStyle.Error" [(visible)]="error" msg="Ups, create account error!"></toaster>
 
   </div>
 </div>

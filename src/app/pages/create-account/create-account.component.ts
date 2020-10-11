@@ -42,8 +42,9 @@ export class CreateAccountComponent {
         this.error = false;
         this.createAccountSuccess = true;
       },
-       error: () => {
+       error: (err) => {
          this.error = true;
+         throw err;
        }
     });
   }

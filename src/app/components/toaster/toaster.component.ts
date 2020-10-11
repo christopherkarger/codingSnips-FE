@@ -32,7 +32,7 @@ import { ToasterStyle } from './style';
 })
 export class ToasterComponent {
   toasterStyle = ToasterStyle;
-  show = false;
+  
   private _visible = false
 
   @Input()
@@ -47,13 +47,16 @@ export class ToasterComponent {
   }
 
 
+  @Output()
+  visibleChange = new EventEmitter<boolean>();
+
   set visible(val: boolean) {
     this._visible = val;
-    this.show = val;
-
+    this.visibleChange.emit(val);
     if (val) {
       setTimeout(() => {
-        this.show = false;
+        this._visible = false;
+        this.visibleChange.emit(false);
       }, 4000);
     }
   }

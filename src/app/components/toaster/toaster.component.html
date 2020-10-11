@@ -2,6 +2,6 @@
 [class.error]="styling === toasterStyle.Error"
 [class.info]="styling === toasterStyle.Info"
 class="toaster" 
-[@openClose]="show ? 'show' : 'hide'">
+[@openClose]="visible ? 'show' : 'hide'">
   <p>{{ msg }}</p>
 </div>

@@ -76,12 +76,12 @@
 
 <toaster
   [styling]="toasterStyle.Error"
-  [visible]="snipUpdateError"
+  [visible]="(snipUpdateError)"
   msg="Could not edit your Snippet! Please try again later."
 ></toaster>
 
 <toaster
   [styling]="toasterStyle.Error"
-  [visible]="snipDeleteError"
+  [visible]="(snipDeleteError)"
   msg="Could not delete your Snippet! Please try again later."
 ></toaster>
