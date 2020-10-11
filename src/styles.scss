@@ -36,6 +36,13 @@ button {
     border: 0;
   }
 
+  &.white {
+    color: #fff;
+    &:hover {
+      color: $textColor;
+    }
+  }
+
   &.highlight {
     background-color: $mainColor;
     color: #fff;
@@ -112,4 +119,20 @@ ul {
   padding: 10px;
   box-sizing: border-box;
   outline: none;
+}
+
+.mbt-10 {
+  margin-top: 10px;
+}
+
+.mbb-10 {
+  margin-bottom: 10px;
+}
+
+.mbt-20 {
+  margin-top: 20px;
+}
+
+.mbb-20 {
+  margin-bottom: 20px;
 }

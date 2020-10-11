@@ -15,6 +15,9 @@ import { Router } from "@angular/router";
 })
 export class LoginComponent {
   formGroup: FormGroup;
+  readonly emailControl = new FormControl("", [Validators.required]);
+  readonly passwordControl = new FormControl("", [Validators.required]);
+
   loading?: boolean;
   error?: boolean;
 
@@ -23,25 +26,22 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    const emailInput = new FormControl("", [Validators.required]);
-    const passwordInput = new FormControl("", [Validators.required]);
+
     this.formGroup = this.fb.group({
-      email: emailInput,
-      password: passwordInput,
+      email: this.emailControl,
+      password: this.passwordControl,
     });
   }
   login() {
-    const email = this.formGroup.get("email");
-    const password = this.formGroup.get("password");
-
-    if (this.formGroup.invalid || !email || !password) {
+    
+    if (this.formGroup.invalid || !this.passwordControl.value || !this.emailControl.value) {
       // TODO: Handle Form rrors
       return;
     }
 
     this.loading = true;
 
-    this.authService.login(email.value, password.value).subscribe({
+    this.authService.login(this.emailControl.value, this.passwordControl.value).subscribe({
       next: (res) => {
         this.loading = false;
         if (res.data) {
