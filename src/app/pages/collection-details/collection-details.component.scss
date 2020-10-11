@@ -34,17 +34,44 @@
   }
 
   &__list {
-    li {
-      border-top: 1px solid $color5;
-    }
-    li:last-child {
-      border-bottom: 1px solid $color5;
-    }
-    button {
+    li button {
+      position: relative;
       width: 100%;
       padding: 15px 25px;
       box-sizing: border-box;
       text-align: left;
+      &:before,
+      &:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: $color5;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &:after {
+        top: auto;
+        bottom: 0;
+        display: none;
+      }
+
+      &.active-link {
+        border: 0;
+        background-color: $mainColor;
+        color: #fff;
+        &:after,
+        &:before {
+          display: none !important;
+        }
+      }
+    }
+    li:last-child button {
+      &:after {
+        display: block;
+      }
     }
   }
 }
