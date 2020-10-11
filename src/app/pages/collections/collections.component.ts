@@ -11,6 +11,7 @@ import { tap, catchError, finalize } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ISnipsCollection } from "../../graphql/model/collections";
 import { SnipsCollections } from "./models/snipscollectons";
+import { ToasterStyle } from 'src/app/components/toaster/style';
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -19,7 +20,7 @@ import { SnipsCollections } from "./models/snipscollectons";
 export class CollectionsComponent implements OnInit {
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
-
+  toasterStyle = ToasterStyle;
   modalVisible = false;
   collectionAddError = false;
   newCodeListForm: FormGroup;

@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+import { ToasterStyle } from 'src/app/components/toaster/style';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,7 +11,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class CreateAccountComponent {
   formGroup: FormGroup;
-  loading = false;
+  createAccountSuccess = false;
+  loading?: boolean;
+  error?: boolean;
+  toasterStyle = ToasterStyle;
+
   readonly emailControl = new FormControl("", [Validators.required]);
   readonly passwordControl = new FormControl("", [Validators.required]);
 
@@ -25,6 +31,20 @@ export class CreateAccountComponent {
   }
 
   createAccount(): void {
-
+    this.loading = true;
+    this.authService.createUser(this.emailControl.value, this.passwordControl.value)
+    .pipe(
+      finalize(() => { 
+        this.loading = false;
+      }))
+    .subscribe({
+      next: (res) => {
+        this.error = false;
+        this.createAccountSuccess = true;
+      },
+       error: () => {
+         this.error = true;
+       }
+    });
   }
 }

@@ -6,12 +6,14 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { tap, catchError } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
 import { SnipDetails } from "./models/snip-details";
+import { ToasterStyle } from 'src/app/components/toaster/style';
 
 @Component({
   templateUrl: "./snip.component.html",
   styleUrls: ["./snip.component.scss"],
 })
 export class SnipComponent implements OnInit, OnDestroy {
+  toasterStyle = ToasterStyle;
   codeLanguages = codeLanguages;
   initError = false;
   loading = false;

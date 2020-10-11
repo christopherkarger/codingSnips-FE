@@ -21,12 +21,14 @@ import { catchError, tap } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
 import { SnipsCollection } from "./models/snipscollection";
 import { Snip } from "../snip/models/snip";
+import { ToasterStyle } from 'src/app/components/toaster/style';
 
 @Component({
   templateUrl: "./collection-details.component.html",
   styleUrls: ["./collection-details.component.scss"],
 })
 export class CollectionDetailsComponent implements OnInit, OnDestroy {
+  toasterStyle = ToasterStyle;
   codeLanguages = codeLanguages;
   initError = false;
   loading = false;

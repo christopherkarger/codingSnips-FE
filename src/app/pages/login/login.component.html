@@ -31,6 +31,6 @@
     </form>
 
     <button class="white mbt-20" routerLink="/create-account">Create an account!</button>
-    <toaster [(visible)]="error" msg="Ups, Login Error"></toaster>
+    <toaster [styling]="toasterStyle.Error" [visible]="error" msg="Ups, Login Error"></toaster>
   </div>
 </div>

@@ -57,6 +57,7 @@
 </code-modal>
 
 <toaster
-  [(visible)]="collectionAddError"
+  [styling]="toasterStyle.Error"
+  [visible]="collectionAddError"
   msg="Could not save your collection! Please try again later."
 ></toaster>

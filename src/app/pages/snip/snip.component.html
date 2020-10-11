@@ -71,11 +71,13 @@
 </div>
 
 <toaster
-  [(visible)]="snipUpdateError"
+  [styling]="toasterStyle.Error"
+  [visible]="snipUpdateError"
   msg="Could not edit your Snippet! Please try again later."
 ></toaster>
 
 <toaster
-  [(visible)]="snipDeleteError"
+  [styling]="toasterStyle.Error"
+  [visible]="snipDeleteError"
   msg="Could not delete your Snippet! Please try again later."
 ></toaster>

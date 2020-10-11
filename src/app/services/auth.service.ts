@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
 import gql from "graphql-tag";
 import { Observable, pipe } from "rxjs";
-import { take, tap } from "rxjs/operators";
+import { map, take, tap } from "rxjs/operators";
 import { ApolloQueryResult } from "apollo-client";
 import { GraphQlService } from "./graphql.service";
 import { environment } from "../../environments/environment";
 import { LogoutService } from "./logout.service";
+import { CreateUserMutation } from '../graphql/model/user';
+import { createUserMutation } from '../graphql/gql/user';
+import { User } from '../pages/login/models/user';
 
 interface ILoginData {
   login: {
@@ -57,6 +60,26 @@ export class AuthService {
               val.data.login.token
             );
           }
+        })
+      );
+  }
+
+
+  createUser(
+    email: string,
+    password: string
+  ): Observable<User> {
+    return this.graphQlService
+      .mutate<CreateUserMutation, User>(createUserMutation, {
+        email,
+        password,
+      })
+      .pipe(
+        take(1),
+        map(() => {
+          return new User({
+            email: email
+          });
         })
       );
   }

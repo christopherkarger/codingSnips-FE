@@ -4,7 +4,12 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: $color4;
   color: #fff;
   padding: 10px 15px;
+  &.error {
+    background: $color4;
+  }
+  &.info {
+    background: $color6;
+  }
 }

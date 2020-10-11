@@ -132,12 +132,14 @@
 </div>
 
 <toaster
-  [(visible)]="snipAddError"
+  [styling]="toasterStyle.Error"
+  [visible]="snipAddError"
   msg="Could not add Snip! Please try again later."
 ></toaster>
 
 <toaster
-  [(visible)]="collectionUpdateError"
+  [styling]="toasterStyle.Error"
+  [visible]="collectionUpdateError"
   msg="Could not save your changes! Please try again later."
 ></toaster>
 

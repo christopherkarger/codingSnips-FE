@@ -8,12 +8,14 @@ import {
 import { AuthService } from "../../services/auth.service";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { ToasterStyle } from 'src/app/components/toaster/style';
 
 @Component({
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent {
+  toasterStyle = ToasterStyle;
   formGroup: FormGroup;
   readonly emailControl = new FormControl("", [Validators.required]);
   readonly passwordControl = new FormControl("", [Validators.required]);

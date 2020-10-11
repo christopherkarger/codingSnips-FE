@@ -1,7 +1,7 @@
 <div class="form-wrapper">
-  <!-- <div class="loading-wrapper">
+  <div class="loading-wrapper">
     <loading [loading]="loading" [white]="true"></loading>
-  </div> -->
+  </div>
   <div class="form-wrapper__inner">
     <div class="logo">
       <span class="logo__icon">{{ "{ " + "🍺" + " }" }}</span>
@@ -31,8 +31,10 @@
     </form>
 
     <button class="white mbt-20" routerLink="/login">Back to Login!</button>
-    
-    <!-- <toaster [(visible)]="error" msg="Ups, Login Error"></toaster> -->
+
+
+    <toaster [styling]="toasterStyle.Info" [visible]="createAccountSuccess" msg="Your account was created successfully"></toaster>
+    <toaster [styling]="toasterStyle.Error" [visible]="error" msg="Ups, create account error!"></toaster>
 
   </div>
 </div>
