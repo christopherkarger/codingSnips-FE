@@ -14,9 +14,13 @@
     </div>
     <div class="snip__language">{{ snip.language }}</div>
 
-    <pre>
-      <code [highlight]="snip.text" [lang]="snip.language"></code>
-    </pre>
+    <div class="hljs-wrapper">
+      <div class="hljs-wrapper__inner">
+        <pre>
+          <code [highlight]="snip.text" [lang]="snip.language"></code>
+        </pre>
+      </div>
+    </div>
 
     <code-modal
       [visible]="deleteSnipModalVisible"

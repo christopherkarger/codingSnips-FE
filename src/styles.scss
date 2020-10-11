@@ -3,8 +3,20 @@
 @import "./normalize.scss";
 @import "~highlight.js/styles/atom-one-dark.css";
 
+.hljs-wrapper {
+  max-width: 100%;
+  border-radius: 10px;
+  position: relative;
+  &__inner {
+    width: 100%;
+    position: absolute;
+    overflow: auto;
+  }
+}
+
 .hljs {
   padding: 20px;
+  box-sizing: border-box;
 }
 
 * {
