@@ -1,4 +1,4 @@
-<h2 align="center"><img src="static/img/logo.png" width="400" /></h2>
+<h2 align="center"><img src="static/img/logo1.png" width="400" /></h2>
 
 [Demo](https://coding-snips.herokuapp.com)
 
