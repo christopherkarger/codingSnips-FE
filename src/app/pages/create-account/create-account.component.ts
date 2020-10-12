@@ -41,6 +41,14 @@ export class CreateAccountComponent {
       next: (res) => {
         this.error = false;
         this.createAccountSuccess = true;
+
+        this.authService.login(this.emailControl.value, this.passwordControl.value).subscribe({
+          next:(res) => {
+            if (res.data) {
+              this.router.navigate(["collections"]);
+            }
+          }
+        });
       },
        error: (err) => {
          this.error = true;
