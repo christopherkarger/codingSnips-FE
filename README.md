@@ -1,8 +1,8 @@
 <h2 align="center"><img src="static/img/logo1.png" width="400" /></h2>
 
-[Demo](https://coding-snips.herokuapp.com)
-
 <p><b>A web app to save code snippets or whatever you want in collections.</b></p>
+
+[Demo](https://coding-snips.herokuapp.com)
 
 <h4>Technology used:</h4>
 
