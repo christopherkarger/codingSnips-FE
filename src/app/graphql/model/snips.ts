@@ -10,6 +10,7 @@ export interface ISnipDetails {
   title: string;
   text: string;
   language: string;
+  favourite: boolean;
   snipsCollection: SnipsCollection;
 }
 
@@ -31,4 +32,8 @@ export type UpdateSnipMutation = {
 
 export type DeleteSnipMutation = {
   deleteSnip: ISnipDetails;
+};
+
+export type UpdateSnipFavouriteMutation = {
+  updateSnipFavourite: ISnipDetails;
 };

@@ -6,6 +6,7 @@ export class SnipDetails {
   title: string;
   text: string;
   language: string;
+  favourite: boolean;
   snipsCollection: SnipsCollection;
 
   constructor(x: ISnipDetails) {
@@ -13,6 +14,7 @@ export class SnipDetails {
     this.title = x.title;
     this.text = x.text;
     this.language = x.language;
+    this.favourite = x.favourite;
     this.snipsCollection = x.snipsCollection;
   }
 }

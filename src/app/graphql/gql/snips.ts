@@ -6,6 +6,7 @@ export const createSnipMutation = gql`
     $text: String!
     $title: String!
     $language: String!
+    $favourite: Boolean!
   ) {
     createSnip(
       snipInput: {
@@ -13,12 +14,14 @@ export const createSnipMutation = gql`
         title: $title
         text: $text
         language: $language
+        favourite: $favourite
       }
     ) {
       _id
       title
       text
       language
+      favourite
     }
   }
 `;
@@ -39,6 +42,7 @@ export const snipDetailsQuery = gql`
       title
       text
       language
+      favourite
     }
   }
 `;
@@ -49,6 +53,7 @@ export const updateSnipMutation = gql`
     $text: String!
     $title: String!
     $language: String!
+    $favourite: Boolean!
   ) {
     updateSnip(
       snipInput: {
@@ -56,12 +61,29 @@ export const updateSnipMutation = gql`
         title: $title
         text: $text
         language: $language
+        favourite: $favourite
       }
     ) {
       _id
       text
       title
       language
+      favourite
+    }
+  }
+`;
+
+export const updateSnipFavouriteMutation = gql`
+  mutation updateSnipFavourite(
+    $snipId: String!
+    $favourite: Boolean!
+  ) {
+    updateSnipFavourite(
+        snipId: $snipId,
+        favourite: $favourite
+    ) {
+      _id
+      favourite
     }
   }
 `;
@@ -73,6 +95,7 @@ export const deleteSnipMutation = gql`
       text
       title
       language
+      favourite
       snipsCollection {
         _id
       }

@@ -7,7 +7,7 @@ import {
   CreateSnipMutation,
   SnipsFromCollectionQuery,
   SnipDetailsQuery,
-  ISnipDetails,
+  UpdateSnipFavouriteMutation,
   UpdateSnipMutation,
   DeleteSnipMutation,
 } from "../graphql/model/snips";
@@ -17,6 +17,7 @@ import {
   snipDetailsQuery,
   updateSnipMutation,
   deleteSnipMutation,
+  updateSnipFavouriteMutation,
 } from "../graphql/gql/snips";
 import { Router } from "@angular/router";
 import { SnipDetails } from "../pages/snip/models/snip-details";
@@ -32,7 +33,8 @@ export class SnipsService {
     collectionId: string,
     title: string,
     text: string,
-    language: string
+    language: string,
+    favourite: boolean
   ): Observable<Snip | undefined> {
     return this.graphQlService
       .mutate<CreateSnipMutation, Snip>(createSnipMutation, {
@@ -40,6 +42,7 @@ export class SnipsService {
         title,
         text,
         language,
+        favourite
       })
       .pipe(
         map((result) => {
@@ -97,7 +100,8 @@ export class SnipsService {
     snipId: string,
     title: string,
     text: string,
-    language: string
+    language: string,
+    favourite: boolean
   ): Observable<SnipDetails | undefined> {
     return this.graphQlService
       .mutate<UpdateSnipMutation, SnipDetails>(updateSnipMutation, {
@@ -105,6 +109,7 @@ export class SnipsService {
         title,
         text,
         language,
+        favourite
       })
       .pipe(
         map((result) => {
@@ -113,6 +118,21 @@ export class SnipsService {
           }
         })
       );
+  }
+
+  updateSnipFavourite(snipId: string, favourite: boolean): Observable<SnipDetails | undefined>  {
+    return this.graphQlService
+    .mutate<UpdateSnipFavouriteMutation, SnipDetails>(updateSnipFavouriteMutation, {
+      snipId,
+      favourite,
+    })
+    .pipe(
+      map((result) => {
+        if (result.data) {
+          return new SnipDetails(result.data.updateSnipFavourite);
+        }
+      })
+    );
   }
 
   deleteSnip(snipId: string): Observable<SnipDetails | undefined> {

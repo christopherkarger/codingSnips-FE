@@ -25,11 +25,6 @@ export class SnipComponent implements OnInit, OnDestroy {
   routeSub$?: Subscription;
   snipDetails$?: Observable<SnipDetails>;
 
-  code = `function myFunction() {
-    document.getElementById("demo1").innerHTML = "Hello there!";
-    document.getElementById("demo2").innerHTML = "How are you?";
-  }`;
-
   constructor(
     private snipService: SnipsService,
     private fb: FormBuilder,
@@ -40,6 +35,7 @@ export class SnipComponent implements OnInit, OnDestroy {
       snipTitle: new FormControl(""),
       snipText: new FormControl(""),
       snipLanguage: new FormControl(""),
+      snipFavourite: new FormControl(false)
     });
   }
 
@@ -85,22 +81,37 @@ export class SnipComponent implements OnInit, OnDestroy {
       snipTitle: snip.title,
       snipText: snip.text,
       snipLanguage: snip.language,
+      snipFavourite: snip.favourite
     });
     this.showEditSnipModal();
+  }
+
+  toggleFavourite(snip: SnipDetails): void {
+    this.snipService.updateSnipFavourite(snip._id, !snip.favourite)
+    .subscribe({
+      next: (val) => {},
+      error: (err) => {
+        this.snipUpdateError = true;
+        this.hideEditSnipModal();
+        throw err;
+      },
+    });
   }
 
   saveEditSnip(snip: SnipDetails): void {
     const snipTitle = this.editSnipForm.get("snipTitle");
     const snipText = this.editSnipForm.get("snipText");
     const snipLanguage = this.editSnipForm.get("snipLanguage");
+    const snipFavourite = this.editSnipForm.get("snipFavourite");
 
-    if (snipTitle && snipText && snipLanguage) {
+    if (snipTitle && snipText && snipLanguage && snipFavourite) {
       this.snipService
         .updateSnip(
           snip._id,
           snipTitle.value,
           snipText.value,
-          snipLanguage.value
+          snipLanguage.value,
+          snipFavourite.value
         )
         .subscribe({
           next: () => {

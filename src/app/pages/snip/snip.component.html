@@ -3,6 +3,12 @@
     <div class="snip__header">
       <h2>{{ snip.title }}</h2>
       <div class="snip__actions">
+        
+        <button (click)="toggleFavourite(snip)">
+          <i *ngIf="!snip.favourite" class="material-icons">star_border</i>
+          <i *ngIf="snip.favourite" class="material-icons">star</i>
+        </button>
+      
         <button (click)="editSnip(snip)">
           <i class="material-icons">edit</i>
         </button>
@@ -10,6 +16,7 @@
         <button (click)="deleteSnip()">
           <i class="material-icons">delete</i>
         </button>
+
       </div>
     </div>
     <div class="snip__language">{{ snip.language }}</div>
@@ -50,6 +57,12 @@
               {{ option }}
             </option>
           </select>
+          <input id="fav1" class="fav" type="checkbox" formControlName="snipFavourite" />
+          <label for="fav1">
+            <i class="material-icons">star_border</i>
+            <i class="material-icons">star</i>
+          </label>
+            
         </div>
         <textarea
           class="snippet-area"
@@ -76,12 +89,12 @@
 
 <toaster
   [styling]="toasterStyle.Error"
-  [visible]="(snipUpdateError)"
+  [(visible)]="snipUpdateError"
   msg="Could not edit your Snippet! Please try again later."
 ></toaster>
 
 <toaster
   [styling]="toasterStyle.Error"
-  [visible]="(snipDeleteError)"
+  [(visible)]="snipDeleteError"
   msg="Could not delete your Snippet! Please try again later."
 ></toaster>

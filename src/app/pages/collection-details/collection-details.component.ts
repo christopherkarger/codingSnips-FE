@@ -70,6 +70,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
       snipTitle: new FormControl(""),
       snipText: new FormControl(""),
       snipLanguage: new FormControl(""),
+      snipFavourite: new FormControl(false)
     });
   }
 
@@ -177,6 +178,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
       snipTitle: "",
       snipText: "",
       snipLanguage: "",
+      snipFavourite: false
     });
   }
 
@@ -195,14 +197,16 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     const snipTitle = this.addSnipForm.get("snipTitle");
     const snipText = this.addSnipForm.get("snipText");
     const snipLanguage = this.addSnipForm.get("snipLanguage");
+    const snipFavourite = this.addSnipForm.get("snipFavourite");
 
-    if (snipTitle && snipText && snipLanguage) {
+    if (snipTitle && snipText && snipLanguage && snipFavourite) {
       this.snipsService
         .addSnip(
           collection._id,
           snipTitle.value,
           snipText.value,
-          snipLanguage.value
+          snipLanguage.value,
+          snipFavourite.value
         )
         .subscribe({
           next: () => {

@@ -99,6 +99,7 @@ export class CollectionsService {
               _id: result.data.createSnipsCollection._id,
               title,
               __typename: "SnipsCollection",
+              snipsCount: 0
             };
 
             if (data) {
