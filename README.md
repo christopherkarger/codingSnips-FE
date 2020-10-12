@@ -1,5 +1,6 @@
 <h3>{ 🍺 }</h3>
 <h3>Coding Snips</h3>
+
 [Demo](https://coding-snips.herokuapp.com)
 
 <p>A Web App to save code snippets or whatever you want in collections.</p>
