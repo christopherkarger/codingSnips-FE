@@ -9,7 +9,7 @@
 
 1. Angular
 
-2. GraphQl
+2. GraphQL
 
 3. Apollo
 
