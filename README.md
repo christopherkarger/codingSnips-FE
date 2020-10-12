@@ -1,5 +1,4 @@
-<h3>{ 🍺 }</h3>
-<h3>Coding Snips</h3>
+<h2 align="center"><img src="static/img/logo.png" width="400" /></h2>
 
 [Demo](https://coding-snips.herokuapp.com)
 
@@ -14,3 +13,5 @@
 3. Apollo
 
 4. MongoDB
+
+![Screenshot 1](static/img//screen1.png?raw=true "Screenshot 1")
