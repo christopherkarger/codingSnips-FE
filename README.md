@@ -1,3 +1,3 @@
-<h1 styl="text-align:center">{ 🍺 }</h1>
-<h2>Coding Snips</h2>
-[Demo](https://coding-snips.herokuapp.com)
+<h1 style="text-align:center">{ 🍺 }</h1>
+<h2 style="text-align:center">Coding Snips</h2>
+(https://coding-snips.herokuapp.com, "Demo")
