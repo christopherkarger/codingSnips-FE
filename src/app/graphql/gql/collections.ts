@@ -17,6 +17,7 @@ export const allSnipsCollectionsQuery = gql`
     snipsCollections {
       _id
       title
+      snipsCount
     }
   }
 `;

@@ -4,7 +4,7 @@
 }
 .collections-sidebar {
   height: 100vh;
-  min-width: 300px;
+  width: 300px;
   background-color: $mainColor;
   color: #fff;
   overflow: auto;
@@ -35,6 +35,8 @@
     //   margin-bottom: 10px;
     // }
     button {
+      display: flex;
+      justify-content: space-between;
       padding: 15px 25px;
       width: 100%;
       box-sizing: border-box;

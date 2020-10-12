@@ -7,9 +7,10 @@
 }
 .collection-detail {
   height: 100vh;
-  min-width: 400px;
+  width: 330px;
   overflow: auto;
   border-right: 1px solid $color2;
+
   &__header {
     display: flex;
     padding: 25px 25px 10px 25px;

@@ -71,4 +71,8 @@ export class GraphQlService {
       this.logoutService.logout();
     }
   }
+
+  clearCache(): void {
+    this.apollo.getClient().cache.reset()
+  }
 }

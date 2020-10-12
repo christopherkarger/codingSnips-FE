@@ -3,6 +3,7 @@ import { ISnip } from "./snips";
 export interface ISnipsCollection {
   _id: string;
   title: string;
+  snipsCount: number; 
   snips?: ISnip[];
 }
 

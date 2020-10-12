@@ -7,6 +7,7 @@
   max-width: 100%;
   border-radius: 10px;
   position: relative;
+
   &__inner {
     width: 100%;
     position: absolute;
@@ -112,6 +113,7 @@ ul {
 }
 
 .language-select {
+  cursor: pointer;
   border: 1px solid $color2;
   height: 40px;
   box-sizing: border-box;
@@ -127,6 +129,7 @@ ul {
   max-width: 100%;
   min-width: 100%;
   min-height: 300px;
+  margin-bottom: 20px;
   border: 1px solid $color2;
   padding: 10px;
   box-sizing: border-box;

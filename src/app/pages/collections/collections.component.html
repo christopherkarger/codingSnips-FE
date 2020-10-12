@@ -25,8 +25,10 @@
   >
     <li *ngFor="let item of allCollections.snipsCollection">
       <button [routerLink]="item._id" routerLinkActive="active-link">
-        {{ item.title }}
+        <span>{{ item.title }}</span>
+        <span class="snips.cont">{{ item.snipsCount }}</span>
       </button>
+
     </li>
   </ul>
 </div>
