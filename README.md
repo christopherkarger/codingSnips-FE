@@ -2,7 +2,7 @@
 
 [Demo](https://coding-snips.herokuapp.com)
 
-<p>A web app to save code snippets or whatever you want in collections.</p>
+<p align="center"><b>A web app to save code snippets or whatever you want in collections.</b></p>
 
 <h4>Technology used</h4>
 
