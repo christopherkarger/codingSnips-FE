@@ -19,17 +19,23 @@
 
   <loading [loading]="initLoading && !initError" [white]="true"></loading>
 
-  <ul
-    class="collections-sidebar__items"
-    *ngIf="allCollections$ | async as allCollections"
-  >
-    <li *ngFor="let item of allCollections.snipsCollection">
-      <button [routerLink]="item._id" routerLinkActive="active-link">
-        <span>{{ item.title }}</span>
-        <span class="snips.cont">{{ item.snipsCount }}</span>
-      </button>
-
-    </li>
+  <ul class="collections-sidebar__items">
+    <ng-container *ngIf="favourites$ | async as fav">
+      <li *ngIf="!initLoading">
+        <button routerLink="favourites" routerLinkActive="active-link">
+          <span>Favourites</span>
+          <span>{{ fav.snipsCount }}</span>
+        </button>
+      </li>
+    </ng-container>
+    <ng-container  *ngIf="allCollections$ | async as allCollections">
+      <li *ngFor="let item of allCollections.snipsCollection">
+        <button [routerLink]="item._id" routerLinkActive="active-link">
+          <span>{{ item.title }}</span>
+          <span>{{ item.snipsCount }}</span>
+        </button>
+      </li>
+    </ng-container>
   </ul>
 </div>
 

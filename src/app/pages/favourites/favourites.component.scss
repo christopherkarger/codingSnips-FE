@@ -1,0 +1,78 @@
+@import "../../../variables.scss";
+:host {
+  display: contents;
+  & ::ng-deep .code-modal__inner {
+    width: 600px;
+  }
+}
+.collection-detail {
+  height: 100vh;
+  width: 330px;
+  overflow: auto;
+  border-right: 1px solid $color2;
+
+  &__header {
+    display: flex;
+    padding: 25px 25px 10px 25px;
+    h2 {
+      font-size: 17px;
+      max-width: 260px;
+    }
+  }
+  &__actions {
+    margin-left: auto;
+  }
+
+  &__delete-collection {
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button + button {
+    margin-left: 10px;
+  }
+
+  &__list {
+    li button {
+      position: relative;
+      width: 100%;
+      padding: 15px 25px;
+      box-sizing: border-box;
+      text-align: left;
+      &:before,
+      &:after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: $color5;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      &:after {
+        top: auto;
+        bottom: 0;
+        display: none;
+      }
+
+      &.active-link {
+        border: 0;
+        background-color: $mainColor;
+        color: #fff;
+        &:after,
+        &:before {
+          display: none !important;
+        }
+      }
+    }
+    li:last-child button {
+      &:after {
+        display: block;
+      }
+    }
+  }
+}

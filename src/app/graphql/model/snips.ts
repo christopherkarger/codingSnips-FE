@@ -3,6 +3,7 @@ import { SnipsCollection } from "../../pages/collection-details/models/snipscoll
 export interface ISnip {
   _id: string;
   title: string;
+  __typename: string;
 }
 
 export interface ISnipDetails {

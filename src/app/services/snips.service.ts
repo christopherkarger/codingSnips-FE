@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { GraphQlService } from "./graphql.service";
 import {
   ISnip,
@@ -19,10 +19,18 @@ import {
   deleteSnipMutation,
   updateSnipFavouriteMutation,
 } from "../graphql/gql/snips";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { SnipDetails } from "../pages/snip/models/snip-details";
 //import { SnipsCollection } from "../pages/collection-details/models/snipscollection";
 import { Snip } from "../pages/snip/models/snip";
+import {
+  favouritesInfoQuery,
+  favouritesQuery,
+} from "../graphql/gql/collections";
+import {
+  FavouritesInfoQuery,
+  FavouritesQuery,
+} from "../graphql/model/collections";
 @Injectable({
   providedIn: "root",
 })
@@ -42,28 +50,41 @@ export class SnipsService {
         title,
         text,
         language,
-        favourite
+        favourite,
       })
       .pipe(
+        tap((result) => {
+          if (result.data) {
+            try {
+              const clientData = this.graphQlService.readQuery<
+                SnipsFromCollectionQuery
+              >(snipsFromCollectionQuery, { collectionId });
+
+              const newSnip = {
+                _id: result.data.createSnip._id,
+                title,
+                __typename: "Snip",
+              };
+
+              if (clientData) {
+                this.graphQlService.writeQuery(
+                  snipsFromCollectionQuery,
+                  {
+                    snipsFromCollection: [
+                      ...clientData.snipsFromCollection,
+                      newSnip,
+                    ],
+                  },
+                  { collectionId }
+                );
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
+            }
+          }
+        }),
         map((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              SnipsFromCollectionQuery
-            >(snipsFromCollectionQuery, { collectionId });
-
-            const newSnip = {
-              _id: result.data.createSnip._id,
-              title,
-              __typename: "Snip",
-            };
-
-            if (data) {
-              this.graphQlService.writeQuery(
-                snipsFromCollectionQuery,
-                { snipsFromCollection: [...data.snipsFromCollection, newSnip] },
-                { collectionId }
-              );
-            }
             return new Snip(result.data.createSnip);
           }
         })
@@ -109,7 +130,7 @@ export class SnipsService {
         title,
         text,
         language,
-        favourite
+        favourite,
       })
       .pipe(
         map((result) => {
@@ -120,19 +141,77 @@ export class SnipsService {
       );
   }
 
-  updateSnipFavourite(snipId: string, favourite: boolean): Observable<SnipDetails | undefined>  {
+  updateSnipFavourite(
+    snip: SnipDetails,
+    favourite: boolean
+  ): Observable<SnipDetails | undefined> {
     return this.graphQlService
-    .mutate<UpdateSnipFavouriteMutation, SnipDetails>(updateSnipFavouriteMutation, {
-      snipId,
-      favourite,
-    })
-    .pipe(
-      map((result) => {
-        if (result.data) {
-          return new SnipDetails(result.data.updateSnipFavourite);
+      .mutate<UpdateSnipFavouriteMutation, SnipDetails>(
+        updateSnipFavouriteMutation,
+        {
+          snipId: snip._id,
+          favourite,
         }
-      })
-    );
+      )
+      .pipe(
+        tap((result) => {
+          if (result.data) {
+            try {
+              const infoData = this.graphQlService.readQuery<
+                FavouritesInfoQuery
+              >(favouritesInfoQuery);
+              if (infoData) {
+                this.graphQlService.writeQuery(favouritesInfoQuery, {
+                  favouriteSnips: {
+                    ...infoData.favouriteSnips,
+                    snipsCount: favourite
+                      ? infoData.favouriteSnips.snipsCount + 1
+                      : infoData.favouriteSnips.snipsCount - 1,
+                  },
+                });
+              }
+
+              const favouritesData = this.graphQlService.readQuery<
+                FavouritesQuery
+              >(favouritesQuery);
+
+              if (favouritesData) {
+                let favSnips = favouritesData.favouriteSnips.snips.map((s) => ({
+                  ...s,
+                }));
+
+                if (favourite) {
+                  favSnips.push({
+                    _id: snip._id,
+                    title: snip.title,
+                    __typename: "Snip",
+                  });
+                } else {
+                  favSnips = favSnips.filter((s) => s._id !== snip._id);
+                }
+
+                this.graphQlService.writeQuery(favouritesQuery, {
+                  favouriteSnips: {
+                    ...favouritesData.favouriteSnips,
+                    snips: favSnips,
+                  },
+                });
+
+                if (!favourite && this.router.url.includes("favourites")) {
+                  this.router.navigate(["/collections/favourites"]);
+                }
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
+            }
+          }
+        }),
+        map((result) => {
+          if (result.data) {
+            return new SnipDetails(result.data.updateSnipFavourite);
+          }
+        })
+      );
   }
 
   deleteSnip(snipId: string): Observable<SnipDetails | undefined> {
@@ -141,30 +220,38 @@ export class SnipsService {
         snipId,
       })
       .pipe(
+        tap((result) => {
+          if (result.data) {
+            try {
+              const clientData = this.graphQlService.readQuery<
+                SnipsFromCollectionQuery
+              >(snipsFromCollectionQuery, {
+                collectionId: result.data.deleteSnip.snipsCollection._id,
+              });
+              if (clientData) {
+                const newData = clientData.snipsFromCollection.filter(
+                  (col: ISnip) => col._id !== snipId
+                );
+
+                this.graphQlService.writeQuery(
+                  snipsFromCollectionQuery,
+                  {
+                    snipsFromCollection: [...newData],
+                  },
+                  { collectionId: result.data.deleteSnip.snipsCollection._id }
+                );
+
+                this.router.navigate([
+                  `/collections/${result.data.deleteSnip.snipsCollection._id}`,
+                ]);
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
+            }
+          }
+        }),
         map((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              SnipsFromCollectionQuery
-            >(snipsFromCollectionQuery, {
-              collectionId: result.data.deleteSnip.snipsCollection._id,
-            });
-            if (data) {
-              const newData = data.snipsFromCollection.filter(
-                (col: ISnip) => col._id !== snipId
-              );
-
-              this.graphQlService.writeQuery(
-                snipsFromCollectionQuery,
-                {
-                  snipsFromCollection: [...newData],
-                },
-                { collectionId: result.data.deleteSnip.snipsCollection._id }
-              );
-
-              this.router.navigate([
-                `/collections/${result.data.deleteSnip.snipsCollection._id}`,
-              ]);
-            }
             return new SnipDetails(result.data.deleteSnip);
           }
         })

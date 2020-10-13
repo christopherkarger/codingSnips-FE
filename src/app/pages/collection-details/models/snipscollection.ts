@@ -1,9 +1,10 @@
 import { ISnipsCollection } from "../../../graphql/model/collections";
+import { Snip } from '../../snip/models/snip';
 
 export class SnipsCollection {
   _id: string;
   title: string;
-  snips?: any[];
+  snips?: Snip[];
   snipsCount: number; 
 
   constructor(x: ISnipsCollection) {

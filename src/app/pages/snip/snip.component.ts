@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
 import { tap, catchError } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
 import { SnipDetails } from "./models/snip-details";
-import { ToasterStyle } from 'src/app/components/toaster/style';
+import { ToasterStyle } from "src/app/components/toaster/style";
 
 @Component({
   templateUrl: "./snip.component.html",
@@ -35,7 +35,7 @@ export class SnipComponent implements OnInit, OnDestroy {
       snipTitle: new FormControl(""),
       snipText: new FormControl(""),
       snipLanguage: new FormControl(""),
-      snipFavourite: new FormControl(false)
+      snipFavourite: new FormControl(false),
     });
   }
 
@@ -81,14 +81,13 @@ export class SnipComponent implements OnInit, OnDestroy {
       snipTitle: snip.title,
       snipText: snip.text,
       snipLanguage: snip.language,
-      snipFavourite: snip.favourite
+      snipFavourite: snip.favourite,
     });
     this.showEditSnipModal();
   }
 
   toggleFavourite(snip: SnipDetails): void {
-    this.snipService.updateSnipFavourite(snip._id, !snip.favourite)
-    .subscribe({
+    this.snipService.updateSnipFavourite(snip, !snip.favourite).subscribe({
       next: (val) => {},
       error: (err) => {
         this.snipUpdateError = true;

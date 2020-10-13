@@ -1,9 +1,17 @@
 import { ISnip } from "./snips";
 
+export interface IFavouriteSnipsInfo {
+  snipsCount: number;
+}
+
+export interface IFavouriteSnips {
+  snips: ISnip[];
+}
+
 export interface ISnipsCollection {
   _id: string;
   title: string;
-  snipsCount: number; 
+  snipsCount: number;
   snips?: ISnip[];
 }
 
@@ -25,4 +33,12 @@ export type CreateSnipsCollectionMutation = {
 
 export type DeleteSnipsCollectionMutation = {
   deleteSnipsCollection: ISnipsCollection;
+};
+
+export type FavouritesInfoQuery = {
+  favouriteSnips: IFavouriteSnipsInfo;
+};
+
+export type FavouritesQuery = {
+  favouriteSnips: IFavouriteSnips;
 };

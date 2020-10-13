@@ -48,3 +48,22 @@ export const deleteSnipsCollectionMutation = gql`
     }
   }
 `;
+
+export const favouritesInfoQuery = gql`
+  query favouriteInfoSnips {
+    favouriteSnips {
+      snipsCount
+    }
+  }
+`;
+
+export const favouritesQuery = gql`
+  query favouriteSnips {
+    favouriteSnips {
+      snips {
+        _id
+        title
+      }
+    }
+  }
+`;

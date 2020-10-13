@@ -1,0 +1,25 @@
+<div class="collection-detail">
+  <ng-container *ngIf="collection$ | async as collection">
+    <ng-container *ngIf="!loading">
+      <div class="collection-detail__header">
+        <h2>Favourites</h2>  
+      </div>
+      <div class="collection-detail__list">
+      <ul>
+        <li *ngFor="let detail of collection.snips">
+          <button [routerLink]="[detail._id]" routerLinkActive="active-link">
+            {{ detail.title }}
+          </button>
+        </li>
+      </ul>
+    </div>
+    </ng-container>
+  </ng-container>
+  <loading [loading]="loading && !initError"></loading>
+  <error
+    [error]="initError"
+    msg="A problem occured while loading your collection!"
+  ></error>
+</div>
+
+<router-outlet></router-outlet>

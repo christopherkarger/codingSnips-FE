@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { GraphQlService } from "./graphql.service";
 import {
@@ -10,6 +10,8 @@ import {
   UpdateSnipsCollectionNameMutation,
   CreateSnipsCollectionMutation,
   DeleteSnipsCollectionMutation,
+  FavouritesInfoQuery,
+  FavouritesQuery,
 } from "../graphql/model/collections";
 import {
   snipsCollectionByIdQuery,
@@ -17,10 +19,13 @@ import {
   updateSnipsCollectionNameMutation,
   createSnipsCollectionMutation,
   deleteSnipsCollectionMutation,
+  favouritesInfoQuery,
+  favouritesQuery,
 } from "../graphql/gql/collections";
 import { SnipsCollections } from "../pages/collections/models/snipscollectons";
 import { SnipsCollection } from "../pages/collection-details/models/snipscollection";
-
+import { FavouritesInfo } from "../pages/collections/models/favourites-info";
+import { Favourites } from "../pages/favourites/models/favourites";
 @Injectable({
   providedIn: "root",
 })
@@ -62,6 +67,30 @@ export class CollectionsService {
       );
   }
 
+  getFavourites(): Observable<Favourites> {
+    return this.graphQlService
+      .watchQuery<FavouritesQuery>(favouritesQuery)
+      .pipe(
+        map((result) => {
+          return new Favourites({
+            snips: result.data.favouriteSnips.snips,
+          });
+        })
+      );
+  }
+
+  getFavouritesInfo(): Observable<FavouritesInfo> {
+    return this.graphQlService
+      .watchQuery<FavouritesInfoQuery>(favouritesInfoQuery)
+      .pipe(
+        map((result) => {
+          return new FavouritesInfo({
+            snipsCount: result.data.favouriteSnips.snipsCount,
+          });
+        })
+      );
+  }
+
   updateCollection(
     collectionId: string,
     title: string
@@ -90,23 +119,34 @@ export class CollectionsService {
         { title }
       )
       .pipe(
+        tap((result) => {
+          if (result.data) {
+            try {
+              const clientData = this.graphQlService.readQuery<
+                AllSnipsCollectionsQuery
+              >(allSnipsCollectionsQuery);
+
+              if (clientData) {
+                const newCollection = {
+                  _id: result.data.createSnipsCollection._id,
+                  title,
+                  __typename: "SnipsCollection",
+                  snipsCount: 0,
+                };
+                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
+                  snipsCollections: [
+                    ...clientData.snipsCollections,
+                    newCollection,
+                  ],
+                });
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
+            }
+          }
+        }),
         map((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              AllSnipsCollectionsQuery
-            >(allSnipsCollectionsQuery);
-            const newCollection = {
-              _id: result.data.createSnipsCollection._id,
-              title,
-              __typename: "SnipsCollection",
-              snipsCount: 0
-            };
-
-            if (data) {
-              this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                snipsCollections: [...data.snipsCollections, newCollection],
-              });
-            }
             return new SnipsCollection(result.data?.createSnipsCollection);
           }
         })
@@ -122,25 +162,33 @@ export class CollectionsService {
         { collectionId: collection._id }
       )
       .pipe(
+        tap((result) => {
+          if (result.data) {
+            try {
+              const clientData = this.graphQlService.readQuery<
+                AllSnipsCollectionsQuery
+              >(allSnipsCollectionsQuery);
+
+              if (clientData) {
+                const newData = clientData.snipsCollections.filter(
+                  (col: ISnipsCollection) => col._id !== collection._id
+                );
+
+                if (newData.length === 0) {
+                  this.router.navigate(["/collections"]);
+                }
+
+                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
+                  snipsCollections: [...newData],
+                });
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
+            }
+          }
+        }),
         map((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              AllSnipsCollectionsQuery
-            >(allSnipsCollectionsQuery);
-
-            if (data) {
-              const newData = data.snipsCollections.filter(
-                (col: ISnipsCollection) => col._id !== collection._id
-              );
-
-              if (newData.length === 0) {
-                this.router.navigate(["/collections"]);
-              }
-
-              this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                snipsCollections: [...newData],
-              });
-            }
             return new SnipsCollection(result.data.deleteSnipsCollection);
           }
         })

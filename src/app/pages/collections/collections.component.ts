@@ -7,11 +7,11 @@ import {
 } from "@angular/forms";
 import { CollectionsService } from "../../services/collections.service";
 import { Observable, throwError } from "rxjs";
-import { tap, catchError, finalize } from "rxjs/operators";
+import { tap, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { ISnipsCollection } from "../../graphql/model/collections";
 import { SnipsCollections } from "./models/snipscollectons";
 import { ToasterStyle } from 'src/app/components/toaster/style';
+import { FavouritesInfo } from './models/favourites-info';
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -20,14 +20,15 @@ import { ToasterStyle } from 'src/app/components/toaster/style';
 export class CollectionsComponent implements OnInit {
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
+  newCodeListForm: FormGroup;
   toasterStyle = ToasterStyle;
   modalVisible = false;
   collectionAddError = false;
-  newCodeListForm: FormGroup;
-  allCollections$?: Observable<SnipsCollections>;
   createLoading = false;
   initLoading = false;
   initError = false;
+  allCollections$?: Observable<SnipsCollections>;
+  favourites$?: Observable<FavouritesInfo>;
 
   constructor(
     private router: Router,
@@ -55,6 +56,8 @@ export class CollectionsComponent implements OnInit {
         return throwError(err);
       })
     );
+
+    this.favourites$ = this.collectionsService.getFavouritesInfo();
   }
 
   showModal(): void {

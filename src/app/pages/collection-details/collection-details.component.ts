@@ -7,13 +7,10 @@ import {
 } from "@angular/core";
 import {
   ActivatedRoute,
-  ActivationStart,
   RouterOutlet,
   Router,
 } from "@angular/router";
 import { CollectionsService } from "../../services/collections.service";
-import { ISnip } from "../../graphql/model/snips";
-import { ISnipsCollection } from "../../graphql/model/collections";
 import { SnipsService } from "../../services/snips.service";
 import { Observable, Subscription, empty } from "rxjs";
 import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
@@ -56,8 +53,6 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
 
   constructor(
     private activeRoute: ActivatedRoute,
-    private router: Router,
-    private collectionService: CollectionsService,
     private fb: FormBuilder,
     private collectionsService: CollectionsService,
     private snipsService: SnipsService
@@ -78,7 +73,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
       this.loading = true;
 
-      this.collection$ = this.collectionService
+      this.collection$ = this.collectionsService
         .getCollectionDetails(routeParams.id)
         .pipe(
           tap(() => {
@@ -156,7 +151,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
   }
 
   deleteCollection(collection: SnipsCollection): void {
-    this.collectionService.deleteCollection(collection).subscribe({
+    this.collectionsService.deleteCollection(collection).subscribe({
       next: () => {
         this.collectionUpdateError = false;
         this.hideAndResetEditCollectionModal();

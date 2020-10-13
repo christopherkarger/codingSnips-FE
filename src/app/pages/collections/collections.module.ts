@@ -12,6 +12,14 @@ const routes: Routes = [
     component: CollectionsComponent,
     children: [
       {
+        path: "favourites",
+        canActivate: [ChildRoutesGuardService],
+        loadChildren: () =>
+          import("../favourites/favourites.module").then(
+            (m) => m.FavouritesModule
+          ),
+      },
+      {
         path: ":id",
         canActivate: [ChildRoutesGuardService],
         loadChildren: () =>
