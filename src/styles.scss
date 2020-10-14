@@ -80,10 +80,6 @@ button {
 input {
   padding: 5px 8px;
   box-sizing: border-box;
-  &:focus {
-    border: 0;
-    outline: 0;
-  }
 }
 
 h1,
@@ -162,6 +158,16 @@ ul {
         display: block;
       }
     }
+  }
+}
+
+input,
+select,
+textarea {
+  &:focus {
+    border: 0 !important;
+    box-shadow: 0 0 8px 0 rgba(64, 163, 213, 0.75);
+    outline: 0;
   }
 }
 
