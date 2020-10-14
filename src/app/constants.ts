@@ -1,1 +1,8 @@
-export const codeLanguages = ["HTML", "CSS", "JavaScript"];
+export const codeLanguages = [
+  "HTML",
+  "CSS",
+  "SCSS",
+  "JavaScript",
+  "TypeScript",
+  "Bash",
+];

@@ -12,11 +12,13 @@ export interface ISnipDetails {
   text: string;
   language: string;
   favourite: boolean;
-  snipsCollection: SnipsCollection;
+  snipsCollection: {
+    _id: string;
+  };
 }
 
 export type CreateSnipMutation = {
-  createSnip: ISnip;
+  createSnip: ISnipDetails;
 };
 
 export type SnipsFromCollectionQuery = {

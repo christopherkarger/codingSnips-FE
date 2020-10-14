@@ -7,7 +7,9 @@ export class SnipDetails {
   text: string;
   language: string;
   favourite: boolean;
-  snipsCollection: SnipsCollection;
+  snipsCollection: {
+    _id: string;
+  };
 
   constructor(x: ISnipDetails) {
     this._id = x._id;

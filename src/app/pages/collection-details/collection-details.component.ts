@@ -5,11 +5,7 @@ import {
   ElementRef,
   OnDestroy,
 } from "@angular/core";
-import {
-  ActivatedRoute,
-  RouterOutlet,
-  Router,
-} from "@angular/router";
+import { ActivatedRoute, RouterOutlet, Router } from "@angular/router";
 import { CollectionsService } from "../../services/collections.service";
 import { SnipsService } from "../../services/snips.service";
 import { Observable, Subscription, empty } from "rxjs";
@@ -18,7 +14,7 @@ import { catchError, tap } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
 import { SnipsCollection } from "./models/snipscollection";
 import { Snip } from "../snip/models/snip";
-import { ToasterStyle } from 'src/app/components/toaster/style';
+import { ToasterStyle } from "src/app/components/toaster/style";
 
 @Component({
   templateUrl: "./collection-details.component.html",
@@ -51,6 +47,11 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
 
   collectionDetail$?: Observable<Snip[]>;
 
+  snipTitleControl = new FormControl("");
+  snipTextControl = new FormControl("");
+  snipLanguageControl = new FormControl("");
+  snipFavouriteControl = new FormControl(false);
+
   constructor(
     private activeRoute: ActivatedRoute,
     private fb: FormBuilder,
@@ -62,10 +63,10 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.addSnipForm = this.fb.group({
-      snipTitle: new FormControl(""),
-      snipText: new FormControl(""),
-      snipLanguage: new FormControl(""),
-      snipFavourite: new FormControl(false)
+      snipTitle: this.snipTitleControl,
+      snipText: this.snipTextControl,
+      snipLanguage: this.snipLanguageControl,
+      snipFavourite: this.snipFavouriteControl,
     });
   }
 
@@ -173,7 +174,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
       snipTitle: "",
       snipText: "",
       snipLanguage: "",
-      snipFavourite: false
+      snipFavourite: false,
     });
   }
 
@@ -189,30 +190,33 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
   }
 
   addSnip(collection: SnipsCollection): void {
-    const snipTitle = this.addSnipForm.get("snipTitle");
-    const snipText = this.addSnipForm.get("snipText");
-    const snipLanguage = this.addSnipForm.get("snipLanguage");
-    const snipFavourite = this.addSnipForm.get("snipFavourite");
-
-    if (snipTitle && snipText && snipLanguage && snipFavourite) {
-      this.snipsService
-        .addSnip(
-          collection._id,
-          snipTitle.value,
-          snipText.value,
-          snipLanguage.value,
-          snipFavourite.value
-        )
-        .subscribe({
-          next: () => {
-            this.snipAddError = false;
-          },
-          error: (err) => {
-            this.snipAddError = true;
-            throw err;
-          },
-        });
+    if (
+      !this.snipTitleControl.value ||
+      !this.snipTextControl.value ||
+      !this.snipLanguageControl.value
+    ) {
+      // TODO: Error handling
+      return;
     }
+
+    this.snipsService
+      .addSnip(
+        collection._id,
+        this.snipTitleControl.value,
+        this.snipTextControl.value,
+        this.snipLanguageControl.value,
+        this.snipFavouriteControl.value
+      )
+      .subscribe({
+        next: () => {
+          this.snipAddError = false;
+        },
+        error: (err) => {
+          this.snipAddError = true;
+          throw err;
+        },
+      });
+
     this.hideAndResetAddSnipModal();
   }
 }
