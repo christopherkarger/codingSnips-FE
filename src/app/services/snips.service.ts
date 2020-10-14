@@ -56,30 +56,7 @@ export class SnipsService {
       .pipe(
         tap((result) => {
           if (result.data) {
-            try {
-              const allSnipsCollections = this.graphQlService.readQuery<
-                AllSnipsCollectionsQuery
-              >(allSnipsCollectionsQuery);
-
-              if (allSnipsCollections) {
-                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                  snipsCollections: allSnipsCollections.snipsCollections.map(
-                    (c) => {
-                      return {
-                        ...c,
-                        snipsCount:
-                          result.data && c._id === collectionId
-                            ? c.snipsCount + 1
-                            : c.snipsCount,
-                      };
-                    }
-                  ),
-                });
-              }
-            } catch (err) {
-              // Do nothing if local changes failed
-            }
-
+            this.updateLocalSnipsCount(true, collectionId);
             try {
               const snipsFromCollection = this.graphQlService.readQuery<
                 SnipsFromCollectionQuery
@@ -171,6 +148,32 @@ export class SnipsService {
           }
         })
       );
+  }
+
+  private updateLocalSnipsCount(countUp: boolean, collectionId: string) {
+    try {
+      const allSnipsCollections = this.graphQlService.readQuery<
+        AllSnipsCollectionsQuery
+      >(allSnipsCollectionsQuery);
+
+      if (allSnipsCollections) {
+        this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
+          snipsCollections: allSnipsCollections.snipsCollections.map((c) => {
+            return {
+              ...c,
+              snipsCount:
+                c._id === collectionId
+                  ? countUp
+                    ? c.snipsCount + 1
+                    : c.snipsCount - 1
+                  : c.snipsCount,
+            };
+          }),
+        });
+      }
+    } catch (err) {
+      // Do nothing if local changes failed
+    }
   }
 
   private updateLocalSnipFavourite(
@@ -265,30 +268,10 @@ export class SnipsService {
       .pipe(
         tap((result) => {
           if (result.data) {
-            try {
-              const allSnipsCollections = this.graphQlService.readQuery<
-                AllSnipsCollectionsQuery
-              >(allSnipsCollectionsQuery);
-
-              if (allSnipsCollections) {
-                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                  snipsCollections: allSnipsCollections.snipsCollections.map(
-                    (c) => {
-                      return {
-                        ...c,
-                        snipsCount:
-                          result.data &&
-                          c._id === result.data.deleteSnip.snipsCollection._id
-                            ? c.snipsCount - 1
-                            : c.snipsCount,
-                      };
-                    }
-                  ),
-                });
-              }
-            } catch (err) {
-              // Do nothing if local changes failed
-            }
+            this.updateLocalSnipsCount(
+              false,
+              result.data.deleteSnip.snipsCollection._id
+            );
 
             try {
               const clientData = this.graphQlService.readQuery<
