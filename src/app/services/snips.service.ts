@@ -178,7 +178,7 @@ export class SnipsService {
 
   private updateLocalSnipFavourite(
     snip: SnipDetails,
-    favourite: boolean
+    addFavourite: boolean
   ): void {
     try {
       const infoData = this.graphQlService.readQuery<FavouritesInfoQuery>(
@@ -188,7 +188,7 @@ export class SnipsService {
         this.graphQlService.writeQuery(favouritesInfoQuery, {
           favouriteSnips: {
             ...infoData.favouriteSnips,
-            snipsCount: favourite
+            snipsCount: addFavourite
               ? infoData.favouriteSnips.snipsCount + 1
               : infoData.favouriteSnips.snipsCount - 1,
           },
@@ -208,7 +208,7 @@ export class SnipsService {
           ...s,
         }));
 
-        if (favourite) {
+        if (addFavourite) {
           favSnips.push({
             _id: snip._id,
             title: snip.title,
@@ -225,7 +225,7 @@ export class SnipsService {
           },
         });
 
-        if (!favourite && this.router.url.includes("favourites")) {
+        if (!addFavourite && this.router.url.includes("favourites")) {
           this.router.navigate(["/collections/favourites"]);
         }
       }
@@ -298,6 +298,10 @@ export class SnipsService {
               }
             } catch (err) {
               // Do nothing if local changes failed
+            }
+
+            if (result.data.deleteSnip.favourite) {
+              this.updateLocalSnipFavourite(result.data.deleteSnip, false);
             }
           }
         }),
