@@ -166,7 +166,7 @@ select,
 textarea {
   &:focus {
     border: 0 !important;
-    box-shadow: 0 0 8px 0 rgba(64, 163, 213, 0.75);
+    box-shadow: 0 0 8px 0 rgb(28 143 202 / 75%);
     outline: 0;
   }
 }
