@@ -26,6 +26,7 @@ export class CodingIconComponent {
     "python",
     "ruby",
     "rust",
+    "java",
   ];
 
   titleCodingIcon(title?: string): string | undefined {
