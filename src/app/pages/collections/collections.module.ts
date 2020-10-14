@@ -5,6 +5,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ChildRoutesGuardService } from "../../services/child-routes-guard.service";
 import { SharedComponentsModule } from "../../shared/shared-components.module";
+import { CodingIconComponent } from "../../components/coding-icon/coding-icon.component";
 
 const routes: Routes = [
   {
@@ -32,7 +33,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CollectionsComponent],
+  declarations: [CollectionsComponent, CodingIconComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

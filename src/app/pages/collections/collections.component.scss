@@ -36,7 +36,8 @@
     // }
     button {
       display: flex;
-      justify-content: space-between;
+      //justify-content: space-between;
+      align-items: center;
       padding: 15px 25px;
       width: 100%;
       box-sizing: border-box;
@@ -48,6 +49,16 @@
       &.active-link {
         background-color: transparentize($textColor, 0.7);
       }
+
+      .collection-count {
+        margin-left: auto;
+      }
     }
   }
+}
+
+.coding-icon-fav {
+  position: relative;
+  margin-left: -2px;
+  margin-right: 7px;
 }

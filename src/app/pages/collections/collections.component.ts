@@ -10,8 +10,8 @@ import { Observable, throwError } from "rxjs";
 import { tap, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { SnipsCollections } from "./models/snipscollectons";
-import { ToasterStyle } from 'src/app/components/toaster/style';
-import { FavouritesInfo } from './models/favourites-info';
+import { ToasterStyle } from "src/app/components/toaster/style";
+import { FavouritesInfo } from "./models/favourites-info";
 
 @Component({
   templateUrl: "./collections.component.html",

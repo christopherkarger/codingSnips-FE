@@ -23,16 +23,20 @@
     <ng-container *ngIf="favourites$ | async as fav">
       <li *ngIf="!initLoading">
         <button routerLink="favourites" routerLinkActive="active-link">
-          <span>Favourites</span>
-          <span>{{ fav.snipsCount }}</span>
+          <span class="coding-icon-fav">
+            <i class="material-icons">star</i>
+          </span>
+          <span class="collection-title">Favourites</span>
+          <span class="collection-count">{{ fav.snipsCount }}</span>
         </button>
       </li>
     </ng-container>
-    <ng-container  *ngIf="allCollections$ | async as allCollections">
+    <ng-container *ngIf="allCollections$ | async as allCollections">
       <li *ngFor="let item of allCollections.snipsCollection">
         <button [routerLink]="item._id" routerLinkActive="active-link">
-          <span>{{ item.title }}</span>
-          <span>{{ item.snipsCount }}</span>
+          <coding-icon [title]="item.title"></coding-icon>
+          <span class="collection-title">{{ item.title }}</span>
+          <span class="collection-count">{{ item.snipsCount }}</span>
         </button>
       </li>
     </ng-container>
