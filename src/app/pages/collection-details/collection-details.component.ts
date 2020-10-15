@@ -9,7 +9,12 @@ import { ActivatedRoute, RouterOutlet, Router } from "@angular/router";
 import { CollectionsService } from "../../services/collections.service";
 import { SnipsService } from "../../services/snips.service";
 import { Observable, Subscription, empty } from "rxjs";
-import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators,
+} from "@angular/forms";
 import { catchError, tap } from "rxjs/operators";
 import { codeLanguages } from "src/app/constants";
 import { SnipsCollection } from "./models/snipscollection";
@@ -21,36 +26,34 @@ import { ToasterStyle } from "src/app/components/toaster/style";
   styleUrls: ["./collection-details.component.scss"],
 })
 export class CollectionDetailsComponent implements OnInit, OnDestroy {
-  toasterStyle = ToasterStyle;
-  codeLanguages = codeLanguages;
-  initError = false;
-  loading = false;
-  deleteCollectionView = false;
-  collectionUpdateError = false;
-  snipAddError = false;
-
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
 
   @ViewChild("snipNameInput")
   snipNameInput?: ElementRef;
 
+  @ViewChild("routerOutlet")
+  outlet?: RouterOutlet;
+
+  initError = false;
+  loading = false;
+  deleteCollectionView = false;
+  collectionUpdateError = false;
+  snipAddError = false;
   editCollectionForm: FormGroup;
   addSnipForm: FormGroup;
   editCollectionModalVisible = false;
   addSnipModalVisible = false;
   collection$?: Observable<SnipsCollection>;
   routeSub$?: Subscription;
-
-  @ViewChild("routerOutlet")
-  outlet?: RouterOutlet;
-
   collectionDetail$?: Observable<Snip[]>;
-
-  snipTitleControl = new FormControl("");
-  snipTextControl = new FormControl("");
-  snipLanguageControl = new FormControl("");
-  snipFavouriteControl = new FormControl(false);
+  readonly snipTitleControl = new FormControl("", Validators.required);
+  readonly snipTextControl = new FormControl("", Validators.required);
+  readonly snipLanguageControl = new FormControl("", Validators.required);
+  readonly snipFavouriteControl = new FormControl(false);
+  readonly collectionNameControl = new FormControl("", Validators.required);
+  readonly toasterStyle = ToasterStyle;
+  readonly codeLanguages = codeLanguages;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -59,7 +62,7 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
     private snipsService: SnipsService
   ) {
     this.editCollectionForm = this.fb.group({
-      collectionName: new FormControl(""),
+      collectionName: this.collectionNameControl,
     });
 
     this.addSnipForm = this.fb.group({
@@ -120,22 +123,18 @@ export class CollectionDetailsComponent implements OnInit, OnDestroy {
   }
 
   saveEditCollection(collection: SnipsCollection): void {
-    const input = this.editCollectionForm.get("collectionName");
-
-    if (input) {
-      this.collectionsService
-        .updateCollection(collection._id, input.value)
-        .subscribe({
-          next: () => {
-            this.collectionUpdateError = false;
-          },
-          error: (err) => {
-            this.collectionUpdateError = true;
-            throw err;
-          },
-        });
-      this.hideEditCollectionModal();
-    }
+    this.collectionsService
+      .updateCollection(collection._id, this.collectionNameControl.value)
+      .subscribe({
+        next: () => {
+          this.collectionUpdateError = false;
+        },
+        error: (err) => {
+          this.collectionUpdateError = true;
+          throw err;
+        },
+      });
+    this.hideEditCollectionModal();
   }
 
   outsideAddSnipModalClicked(): void {

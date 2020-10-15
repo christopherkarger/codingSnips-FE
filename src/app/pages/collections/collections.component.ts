@@ -20,8 +20,8 @@ import { FavouritesInfo } from "./models/favourites-info";
 export class CollectionsComponent implements OnInit {
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
+
   newCodeListForm: FormGroup;
-  toasterStyle = ToasterStyle;
   modalVisible = false;
   collectionAddError = false;
   createLoading = false;
@@ -29,6 +29,8 @@ export class CollectionsComponent implements OnInit {
   initError = false;
   allCollections$?: Observable<SnipsCollections>;
   favourites$?: Observable<FavouritesInfo>;
+  readonly toasterStyle = ToasterStyle;
+  readonly collectionNameControl = new FormControl("", Validators.required);
 
   constructor(
     private router: Router,
@@ -36,7 +38,7 @@ export class CollectionsComponent implements OnInit {
     private collectionsService: CollectionsService
   ) {
     this.newCodeListForm = this.fb.group({
-      collectionName: new FormControl("", [Validators.required]),
+      collectionName: this.collectionNameControl,
     });
   }
 
@@ -83,10 +85,10 @@ export class CollectionsComponent implements OnInit {
   }
 
   saveNewCollection(): void {
-    const input = this.newCodeListForm.get("collectionName");
-    if (input) {
-      this.createLoading = true;
-      this.collectionsService.saveNewCollection(input.value).subscribe({
+    this.createLoading = true;
+    this.collectionsService
+      .saveNewCollection(this.collectionNameControl.value)
+      .subscribe({
         next: () => {
           this.createLoading = false;
           this.collectionAddError = false;
@@ -98,9 +100,6 @@ export class CollectionsComponent implements OnInit {
           this.collectionAddError = true;
         },
       });
-    } else {
-      throw new Error("codeListName not set");
-    }
   }
 
   abortNewCollection(): void {
