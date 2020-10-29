@@ -2,6 +2,7 @@
 @import "./variables.scss";
 @import "./normalize.scss";
 @import "~highlight.js/styles/atom-one-dark.css";
+@import "~bootstrap/scss/bootstrap";
 
 .hljs-wrapper {
   max-width: 100%;
@@ -107,6 +108,32 @@ ul {
 
 .flex {
   display: flex;
+}
+
+.snip_tooltip {
+  .tooltip-inner {
+    background-color: $textColor;
+  }
+  &.bs-tooltip-top .arrow::before {
+    border-top-color: $textColor;
+  }
+
+  &.bs-tooltip-right .arrow::before {
+    border-right-color: $textColor;
+  }
+}
+.user-button {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
+  i {
+    font-size: 38px;
+  }
 }
 
 .language-select {

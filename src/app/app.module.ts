@@ -1,12 +1,14 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
-import { AppRoutingModule } from "./app-routing.module";
+import { AppRoutingModule } from "./modules/app-routing.module";
 import { AppComponent } from "./app.component";
-import { GraphQLModule } from "./graphql.module";
+import { GraphQLModule } from "./modules/graphql.module";
 import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
+import { SharedComponentsModule } from "./shared/shared-components.module";
+import { TooltipModule } from "./components/tooltip/tooltip.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,6 +18,8 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
     AppRoutingModule,
     GraphQLModule,
     HttpClientModule,
+    SharedComponentsModule,
+    TooltipModule,
   ],
   providers: [
     {

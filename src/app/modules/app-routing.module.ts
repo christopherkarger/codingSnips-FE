@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-import { AuthguardService } from "./services/authguard.service";
+import { AuthguardService } from "../services/authguard.service";
 
 const routes: Routes = [
   {
@@ -12,7 +12,7 @@ const routes: Routes = [
     path: "collections",
     canActivate: [AuthguardService],
     loadChildren: () =>
-      import("./pages/collections/collections.module").then(
+      import("../pages/collections/collections.module").then(
         (m) => m.CollectionsModule
       ),
   },
@@ -20,14 +20,16 @@ const routes: Routes = [
   {
     path: "login",
     loadChildren: () =>
-      import("./pages/login/login.module").then((m) => m.LoginModule),
+      import("../pages/login/login.module").then((m) => m.LoginModule),
   },
 
   {
     path: "create-account",
     loadChildren: () =>
-      import("./pages/create-account/create-account.module").then((m) => m.CreateAccountModule),
-  }
+      import("../pages/create-account/create-account.module").then(
+        (m) => m.CreateAccountModule
+      ),
+  },
 ];
 
 @NgModule({

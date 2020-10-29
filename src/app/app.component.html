@@ -1,10 +1,13 @@
 <div class="app-wrapper">
   <div class="sidebar" *ngIf="isLoggedIn">
-    <button title="Logout" class="user" type="button" (click)="logout()">
-      <i class="material-icons">
-        person_pin
-      </i>
-    </button>
+    <tooltip
+      (clicked)="logout()"
+      cssClass="user-button"
+      tooltip="Logout"
+      placement="right"
+    >
+      <i class="material-icons"> person_pin </i>
+    </tooltip>
   </div>
   <div class="main-view">
     <router-outlet></router-outlet>
