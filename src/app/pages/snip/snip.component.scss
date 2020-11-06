@@ -9,6 +9,8 @@
   box-sizing: border-box;
   height: 100vh;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
   &__header {
     display: flex;
     margin-bottom: 30px;
@@ -19,6 +21,17 @@
     button + button {
       margin-left: 10px;
     }
+  }
+
+  &__language {
+    margin-bottom: 5px;
+    font-weight: bold;
+    flex: 0 0 auto;
+    margin-right: auto;
+    background: $mainColor;
+    color: #fff;
+    padding: 7px 12px;
+    border-radius: 22px;
   }
 }
 

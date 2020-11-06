@@ -6,7 +6,7 @@ import {
   animate,
   transition,
 } from "@angular/animations";
-
+import { ToasterStyle } from './style';
 @Component({
   selector: "toaster",
   templateUrl: "./toaster.component.html",
@@ -14,32 +14,38 @@ import {
   animations: [
     trigger("openClose", [
       state(
-        "open",
+        "show",
         style({
           transform: "translateX(0%)",
         })
       ),
       state(
-        "closed",
+        "hide",
         style({
           transform: "translateX(100%) translateX(20px)",
         })
       ),
-      transition("open => closed", [animate("0.3s ease-out")]),
-      transition("closed => open", [animate("0.3s ease-out")]),
+      transition("show => hide", [animate("0.3s ease-out")]),
+      transition("hide => show", [animate("0.3s ease-out")]),
     ]),
   ],
 })
 export class ToasterComponent {
-  private _visible = false;
+  toasterStyle = ToasterStyle;
+  
+  private _visible = false
 
   @Input()
   msg?: string;
 
   @Input()
+  styling?: ToasterStyle;
+
+  @Input()
   get visible(): boolean {
     return this._visible;
   }
+
 
   @Output()
   visibleChange = new EventEmitter<boolean>();
@@ -54,4 +60,6 @@ export class ToasterComponent {
       }, 4000);
     }
   }
+
+
 }

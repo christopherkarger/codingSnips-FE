@@ -1,0 +1,11 @@
+<button
+  type="button"
+  [ngClass]="cssClass"
+  [placement]="placement"
+  [ngbTooltip]="tooltip"
+  tooltipClass="snip_tooltip"
+  container="body"
+  (click)="buttonClicked()"
+>
+  <ng-content></ng-content>
+</button>

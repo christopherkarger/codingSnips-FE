@@ -1,3 +1,7 @@
-<div class="toaster" [@openClose]="visible ? 'open' : 'closed'">
+<div 
+[class.error]="styling === toasterStyle.Error"
+[class.info]="styling === toasterStyle.Info"
+class="toaster" 
+[@openClose]="visible ? 'show' : 'hide'">
   <p>{{ msg }}</p>
 </div>

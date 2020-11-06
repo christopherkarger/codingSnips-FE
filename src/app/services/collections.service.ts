@@ -1,16 +1,17 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { AuthService } from "./auth.service";
 import { GraphQlService } from "./graphql.service";
 import {
-  ISnipCollection,
+  ISnipsCollection,
   SnipsCollectionByIdQuery,
   AllSnipsCollectionsQuery,
   UpdateSnipsCollectionNameMutation,
   CreateSnipsCollectionMutation,
   DeleteSnipsCollectionMutation,
+  FavouritesInfoQuery,
+  FavouritesQuery,
 } from "../graphql/model/collections";
 import {
   snipsCollectionByIdQuery,
@@ -18,8 +19,13 @@ import {
   updateSnipsCollectionNameMutation,
   createSnipsCollectionMutation,
   deleteSnipsCollectionMutation,
+  favouritesInfoQuery,
+  favouritesQuery,
 } from "../graphql/gql/collections";
-
+import { SnipsCollections } from "../pages/collections/models/snipscollectons";
+import { SnipsCollection } from "../pages/collection-details/models/snipscollection";
+import { FavouritesInfo } from "../pages/collections/models/favourites-info";
+import { Favourites } from "../pages/favourites/models/favourites";
 @Injectable({
   providedIn: "root",
 })
@@ -34,31 +40,53 @@ export class CollectionsService {
     return this._collectionsLoaded;
   }
 
-  constructor(
-    private graphQlService: GraphQlService,
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  constructor(private graphQlService: GraphQlService, private router: Router) {}
 
-  getCollectionDetails(collectionId: string): Observable<ISnipCollection> {
+  getCollectionDetails(collectionId: string): Observable<SnipsCollection> {
     return this.graphQlService
       .watchQuery<SnipsCollectionByIdQuery>(snipsCollectionByIdQuery, {
         collectionId,
       })
       .pipe(
         map((result) => {
-          return result.data.snipsCollectionById;
+          return new SnipsCollection(result.data.snipsCollectionById);
         })
       );
   }
 
-  getAllCollections(): Observable<ISnipCollection[]> {
+  getAllCollections(): Observable<SnipsCollections> {
     return this.graphQlService
       .watchQuery<AllSnipsCollectionsQuery>(allSnipsCollectionsQuery)
       .pipe(
         map((result) => {
           this.collectionsLoaded = true;
-          return result.data.snipsCollections;
+          return new SnipsCollections({
+            snipsCollection: result.data.snipsCollections,
+          });
+        })
+      );
+  }
+
+  getFavourites(): Observable<Favourites> {
+    return this.graphQlService
+      .watchQuery<FavouritesQuery>(favouritesQuery)
+      .pipe(
+        map((result) => {
+          return new Favourites({
+            snips: result.data.favouriteSnips.snips,
+          });
+        })
+      );
+  }
+
+  getFavouritesInfo(): Observable<FavouritesInfo> {
+    return this.graphQlService
+      .watchQuery<FavouritesInfoQuery>(favouritesInfoQuery)
+      .pipe(
+        map((result) => {
+          return new FavouritesInfo({
+            snipsCount: result.data.favouriteSnips.snipsCount,
+          });
         })
       );
   }
@@ -66,9 +94,9 @@ export class CollectionsService {
   updateCollection(
     collectionId: string,
     title: string
-  ): Observable<ISnipCollection | undefined> {
+  ): Observable<SnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<UpdateSnipsCollectionNameMutation, ISnipCollection>(
+      .mutate<UpdateSnipsCollectionNameMutation, SnipsCollection>(
         updateSnipsCollectionNameMutation,
         {
           collectionId,
@@ -77,72 +105,92 @@ export class CollectionsService {
       )
       .pipe(
         map((result) => {
-          return result.data?.updateSnipsCollectionName;
+          if (result.data) {
+            return new SnipsCollection(result.data.updateSnipsCollectionName);
+          }
         })
       );
   }
 
-  saveNewCollection(title: string): Observable<ISnipCollection | undefined> {
+  saveNewCollection(title: string): Observable<SnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<CreateSnipsCollectionMutation, ISnipCollection>(
+      .mutate<CreateSnipsCollectionMutation, SnipsCollection>(
         createSnipsCollectionMutation,
         { title }
       )
       .pipe(
-        map((result) => {
+        tap((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              AllSnipsCollectionsQuery
-            >(allSnipsCollectionsQuery);
-            const newCollection = {
-              _id: result.data.createSnipsCollection._id,
-              title,
-              __typename: "SnipsCollection",
-            };
+            try {
+              const clientData = this.graphQlService.readQuery<
+                AllSnipsCollectionsQuery
+              >(allSnipsCollectionsQuery);
 
-            if (data) {
-              this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                snipsCollections: [...data.snipsCollections, newCollection],
-              });
+              if (clientData) {
+                const newCollection = {
+                  _id: result.data.createSnipsCollection._id,
+                  title,
+                  __typename: "SnipsCollection",
+                  snipsCount: 0,
+                };
+                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
+                  snipsCollections: [
+                    ...clientData.snipsCollections,
+                    newCollection,
+                  ],
+                });
+              }
+            } catch (err) {
+              // Do nothing if local changes failed
             }
           }
-
-          return result.data?.createSnipsCollection;
+        }),
+        map((result) => {
+          if (result.data) {
+            return new SnipsCollection(result.data?.createSnipsCollection);
+          }
         })
       );
   }
 
   deleteCollection(
-    collection: ISnipCollection
-  ): Observable<ISnipCollection | undefined> {
+    collection: SnipsCollection
+  ): Observable<SnipsCollection | undefined> {
     return this.graphQlService
-      .mutate<DeleteSnipsCollectionMutation, ISnipCollection>(
+      .mutate<DeleteSnipsCollectionMutation, SnipsCollection>(
         deleteSnipsCollectionMutation,
         { collectionId: collection._id }
       )
       .pipe(
-        map((result) => {
+        tap((result) => {
           if (result.data) {
-            const data = this.graphQlService.readQuery<
-              AllSnipsCollectionsQuery
-            >(allSnipsCollectionsQuery);
+            try {
+              const clientData = this.graphQlService.readQuery<
+                AllSnipsCollectionsQuery
+              >(allSnipsCollectionsQuery);
 
-            if (data) {
-              const newData = data.snipsCollections.filter(
-                (col: ISnipCollection) => col._id !== collection._id
-              );
+              if (clientData) {
+                const newData = clientData.snipsCollections.filter(
+                  (col: ISnipsCollection) => col._id !== collection._id
+                );
 
-              if (newData.length === 0) {
-                this.router.navigate(["/collections"]);
+                if (newData.length === 0) {
+                  this.router.navigate(["/collections"]);
+                }
+
+                this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
+                  snipsCollections: [...newData],
+                });
               }
-
-              this.graphQlService.writeQuery(allSnipsCollectionsQuery, {
-                snipsCollections: [...newData],
-              });
+            } catch (err) {
+              // Do nothing if local changes failed
             }
           }
-
-          return result.data?.deleteSnipsCollection;
+        }),
+        map((result) => {
+          if (result.data) {
+            return new SnipsCollection(result.data.deleteSnipsCollection);
+          }
         })
       );
   }

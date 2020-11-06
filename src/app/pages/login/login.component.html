@@ -1,5 +1,8 @@
-<div class="login-wrapper">
-  <div class="login-wrapper__inner">
+<div class="form-wrapper">
+  <div class="loading-wrapper">
+    <loading [loading]="loading" [white]="true"></loading>
+  </div>
+  <div class="form-wrapper__inner">
     <div class="logo">
       <span class="logo__icon">{{ "{ " + "🍺" + " }" }}</span>
       <span class="logo__text">Coding Snips</span>
@@ -18,15 +21,16 @@
         formControlName="password"
       />
       <button
-        class="login"
-        type="button"
+        class="submit"
+        type="submit"
         (click)="login()"
         [disabled]="loading"
       >
         Login
       </button>
     </form>
-    <ng-container *ngIf="loading">Lade...</ng-container>
-    <ng-container *ngIf="error">Error</ng-container>
+
+    <button class="white mbt-20" routerLink="/create-account">Create an account!</button>
+    <toaster [styling]="toasterStyle.Error" [(visible)]="error" msg="Ups, Login Error"></toaster>
   </div>
 </div>

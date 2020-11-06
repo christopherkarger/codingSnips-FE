@@ -1,25 +1,44 @@
-export interface ISnipCollection {
+import { ISnip } from "./snips";
+
+export interface IFavouriteSnipsInfo {
+  snipsCount: number;
+}
+
+export interface IFavouriteSnips {
+  snips: ISnip[];
+}
+
+export interface ISnipsCollection {
   _id: string;
   title: string;
-  snips?: any[];
+  snipsCount: number;
+  snips?: ISnip[];
 }
 
 export type SnipsCollectionByIdQuery = {
-  snipsCollectionById: ISnipCollection;
+  snipsCollectionById: ISnipsCollection;
 };
 
 export type AllSnipsCollectionsQuery = {
-  snipsCollections: ISnipCollection[];
+  snipsCollections: ISnipsCollection[];
 };
 
 export type UpdateSnipsCollectionNameMutation = {
-  updateSnipsCollectionName: ISnipCollection;
+  updateSnipsCollectionName: ISnipsCollection;
 };
 
 export type CreateSnipsCollectionMutation = {
-  createSnipsCollection: ISnipCollection;
+  createSnipsCollection: ISnipsCollection;
 };
 
 export type DeleteSnipsCollectionMutation = {
-  deleteSnipsCollection: ISnipCollection;
+  deleteSnipsCollection: ISnipsCollection;
+};
+
+export type FavouritesInfoQuery = {
+  favouriteSnips: IFavouriteSnipsInfo;
+};
+
+export type FavouritesQuery = {
+  favouriteSnips: IFavouriteSnips;
 };

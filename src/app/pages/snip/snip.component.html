@@ -1,8 +1,14 @@
 <div class="snip">
-  <ng-container *ngIf="snip$ | async as snip">
+  <ng-container *ngIf="snipDetails$ | async as snip">
     <div class="snip__header">
       <h2>{{ snip.title }}</h2>
       <div class="snip__actions">
+        
+        <button (click)="toggleFavourite(snip)">
+          <i *ngIf="!snip.favourite" class="material-icons">star_border</i>
+          <i *ngIf="snip.favourite" class="material-icons">star</i>
+        </button>
+      
         <button (click)="editSnip(snip)">
           <i class="material-icons">edit</i>
         </button>
@@ -10,9 +16,19 @@
         <button (click)="deleteSnip()">
           <i class="material-icons">delete</i>
         </button>
+
       </div>
     </div>
-    <p>{{ snip.text }}</p>
+    <div class="snip__language">{{ snip.language }}</div>
+
+    <div class="hljs-wrapper">
+      <div class="hljs-wrapper__inner">
+        <pre>
+          <code [highlight]="snip.text" [lang]="snip.language"></code>
+        </pre>
+      </div>
+    </div>
+
     <code-modal
       [visible]="deleteSnipModalVisible"
       (outsideClicked)="hideDeleteSnipModal()"
@@ -34,8 +50,25 @@
     >
       <h1>Edit your Snippet</h1>
       <form [formGroup]="editSnipForm">
-        <input class="code-modal__text" formControlName="snipTitle" />
-        <input class="code-modal__text" formControlName="snipText" />
+        <div class="flex">
+          <input class="code-modal__text" formControlName="snipTitle" />
+          <select class="language-select" formControlName="snipLanguage">
+            <option *ngFor="let option of codeLanguages" [value]="option">
+              {{ option }}
+            </option>
+          </select>
+          <input id="fav1" class="fav" type="checkbox" formControlName="snipFavourite" />
+          <label for="fav1">
+            <i class="material-icons">star_border</i>
+            <i class="material-icons">star</i>
+          </label>
+            
+        </div>
+        <textarea
+          class="snippet-area"
+          formControlName="snipText"
+          placeholder="Put your Code Snippet in here..."
+        ></textarea>
         <div class="code-modal__button-actions">
           <button class="highlight" type="button" (click)="saveEditSnip(snip)">
             Save
@@ -55,11 +88,13 @@
 </div>
 
 <toaster
+  [styling]="toasterStyle.Error"
   [(visible)]="snipUpdateError"
   msg="Could not edit your Snippet! Please try again later."
 ></toaster>
 
 <toaster
+  [styling]="toasterStyle.Error"
   [(visible)]="snipDeleteError"
   msg="Could not delete your Snippet! Please try again later."
 ></toaster>

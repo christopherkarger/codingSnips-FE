@@ -1,10 +1,17 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 import { ActivatedRoute } from "@angular/router";
-import { ISnipDetails, ISnip } from "src/app/graphql/model/snips";
 import { SnipsService } from "src/app/services/snips.service";
-import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  FormControl,
+  Validators,
+} from "@angular/forms";
 import { tap, catchError } from "rxjs/operators";
+import { codeLanguages } from "src/app/constants";
+import { SnipDetails } from "./models/snip-details";
+import { ToasterStyle } from "src/app/components/toaster/style";
 
 @Component({
   templateUrl: "./snip.component.html",
@@ -19,7 +26,13 @@ export class SnipComponent implements OnInit, OnDestroy {
   editSnipForm: FormGroup;
   editSnipModalVisible = false;
   routeSub$?: Subscription;
-  snip$?: Observable<ISnipDetails>;
+  snipDetails$?: Observable<SnipDetails>;
+  readonly toasterStyle = ToasterStyle;
+  readonly codeLanguages = codeLanguages;
+  readonly snipTitleControl = new FormControl("", Validators.required);
+  readonly snipTextControl = new FormControl("", Validators.required);
+  readonly snipLanguageControl = new FormControl("", Validators.required);
+  readonly snipFavouriteControl = new FormControl(false);
 
   constructor(
     private snipService: SnipsService,
@@ -28,8 +41,10 @@ export class SnipComponent implements OnInit, OnDestroy {
     private snipsService: SnipsService
   ) {
     this.editSnipForm = this.fb.group({
-      snipTitle: new FormControl(""),
-      snipText: new FormControl(""),
+      snipTitle: this.snipTitleControl,
+      snipText: this.snipTextControl,
+      snipLanguage: this.snipLanguageControl,
+      snipFavourite: this.snipFavouriteControl,
     });
   }
 
@@ -37,7 +52,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.routeSub$ = this.activeRoute.params.subscribe((routeParams) => {
       this.loading = true;
 
-      this.snip$ = this.snipsService
+      this.snipDetails$ = this.snipsService
         .getAllSnipDetailsFromCollection(routeParams.id)
         .pipe(
           tap(() => {
@@ -70,33 +85,47 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.abortEditSnip();
   }
 
-  editSnip(snip: ISnipDetails): void {
+  editSnip(snip: SnipDetails): void {
     this.editSnipForm.patchValue({
       snipTitle: snip.title,
       snipText: snip.text,
+      snipLanguage: snip.language,
+      snipFavourite: snip.favourite,
     });
     this.showEditSnipModal();
   }
 
-  saveEditSnip(snip: ISnipDetails): void {
-    const snipTitle = this.editSnipForm.get("snipTitle");
-    const snipText = this.editSnipForm.get("snipText");
+  toggleFavourite(snip: SnipDetails): void {
+    this.snipService.updateSnipFavourite(snip, !snip.favourite).subscribe({
+      next: (val) => {},
+      error: (err) => {
+        this.snipUpdateError = true;
+        this.hideEditSnipModal();
+        throw err;
+      },
+    });
+  }
 
-    if (snipTitle && snipText) {
-      this.snipService
-        .updateSnip(snip._id, snipTitle.value, snipText.value)
-        .subscribe({
-          next: () => {
-            this.snipUpdateError = false;
-            this.hideEditSnipModal();
-          },
-          error: (err) => {
-            this.snipUpdateError = true;
-            this.hideEditSnipModal();
-            throw err;
-          },
-        });
-    }
+  saveEditSnip(snip: SnipDetails): void {
+    this.snipService
+      .updateSnip(
+        snip._id,
+        this.snipTitleControl.value,
+        this.snipTextControl.value,
+        this.snipLanguageControl.value,
+        this.snipFavouriteControl.value
+      )
+      .subscribe({
+        next: () => {
+          this.snipUpdateError = false;
+          this.hideEditSnipModal();
+        },
+        error: (err) => {
+          this.snipUpdateError = true;
+          this.hideEditSnipModal();
+          throw err;
+        },
+      });
   }
 
   abortEditSnip(): void {
@@ -115,7 +144,7 @@ export class SnipComponent implements OnInit, OnDestroy {
     this.showDeleteSnipModal();
   }
 
-  deleteSnipRequest(snip: ISnipDetails) {
+  deleteSnipRequest(snip: SnipDetails) {
     this.snipService.deleteSnip(snip._id).subscribe({
       next: () => {
         this.snipDeleteError = false;

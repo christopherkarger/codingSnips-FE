@@ -17,6 +17,7 @@ export const allSnipsCollectionsQuery = gql`
     snipsCollections {
       _id
       title
+      snipsCount
     }
   }
 `;
@@ -44,6 +45,25 @@ export const deleteSnipsCollectionMutation = gql`
     deleteSnipsCollection(collectionId: $collectionId) {
       _id
       title
+    }
+  }
+`;
+
+export const favouritesInfoQuery = gql`
+  query favouriteInfoSnips {
+    favouriteSnips {
+      snipsCount
+    }
+  }
+`;
+
+export const favouritesQuery = gql`
+  query favouriteSnips {
+    favouriteSnips {
+      snips {
+        _id
+        title
+      }
     }
   }
 `;

@@ -14,17 +14,32 @@
 
   <error
     [error]="initError"
-    msg="A problem occured while loading your lists"
+    msg="A problem occured while loading your collections!"
   ></error>
 
   <loading [loading]="initLoading && !initError" [white]="true"></loading>
 
   <ul class="collections-sidebar__items">
-    <li *ngFor="let item of allCollections$ | async">
-      <button [routerLink]="item._id" routerLinkActive="active-link">
-        {{ item.title }}
-      </button>
-    </li>
+    <ng-container *ngIf="favourites$ | async as fav">
+      <li *ngIf="!initLoading">
+        <button routerLink="favourites" routerLinkActive="active-link">
+          <span class="coding-icon-fav">
+            <i class="material-icons">star</i>
+          </span>
+          <span class="collection-title">Favourites</span>
+          <span class="collection-count">{{ fav.snipsCount }}</span>
+        </button>
+      </li>
+    </ng-container>
+    <ng-container *ngIf="allCollections$ | async as allCollections">
+      <li *ngFor="let item of allCollections.snipsCollection">
+        <button [routerLink]="item._id" routerLinkActive="active-link">
+          <coding-icon [title]="item.title"></coding-icon>
+          <span class="collection-title">{{ item.title }}</span>
+          <span class="collection-count">{{ item.snipsCount }}</span>
+        </button>
+      </li>
+    </ng-container>
   </ul>
 </div>
 
@@ -54,6 +69,7 @@
 </code-modal>
 
 <toaster
+  [styling]="toasterStyle.Error"
   [(visible)]="collectionAddError"
   msg="Could not save your collection! Please try again later."
 ></toaster>

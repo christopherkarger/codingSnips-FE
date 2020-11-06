@@ -8,6 +8,7 @@
   height: 100vh;
   pointer-events: none;
   opacity: 0;
+  z-index: 1000;
 
   ::ng-deep {
     h1 {
@@ -41,7 +42,7 @@
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    z-index: 1000;
+    z-index: 10;
   }
   &__inner {
     position: relative;
@@ -52,7 +53,7 @@
     box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.2);
   }
   &__bg {
-    z-index: 999;
+    z-index: 9;
     opacity: 0;
     background-color: rgba(0, 0, 0, 0.4);
     transition: opacity 0.2s ease;
@@ -70,4 +71,14 @@
     height: 100%;
     opacity: 1;
   }
+}
+
+.code-modal__snippet {
+  width: 100%;
+  max-width: 100%;
+  min-height: 300px;
+  border: 1px solid $color2;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
 }

@@ -1,0 +1,38 @@
+<div class="form-wrapper">
+  <div class="loading-wrapper">
+    <loading [loading]="loading" [white]="true"></loading>
+  </div>
+  <div class="form-wrapper__inner">
+    <div class="logo">
+      <span class="logo__icon">{{ "{ " + "🍺" + " }" }}</span>
+      <span class="logo__text">Coding Snips</span>
+    </div>
+    <form [formGroup]="formGroup">
+      <input
+        type="text"
+        name="email"
+        placeholder="Email"
+        formControlName="email"
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        formControlName="password"
+      />
+      <button
+        class="submit"
+        type="submit"
+        (click)="createAccount()"
+        [disabled]="loading"
+      >
+       Create account and login
+      </button>
+    </form>
+
+    <button class="white mbt-20" routerLink="/login">Back to Login!</button>
+
+    <toaster [styling]="toasterStyle.Error" [(visible)]="error" msg="Ups, create account error!"></toaster>
+
+  </div>
+</div>

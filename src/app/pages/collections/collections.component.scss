@@ -11,14 +11,13 @@
   padding: 0;
   box-sizing: border-box;
   h1 {
-    font-size: 16px;
-    text-transform: uppercase;
+    font-size: 17px;
     margin: 0;
   }
   &__top {
     display: flex;
     position: relative;
-    padding: 25px 25px 10px 25px;
+    padding: 25px 17px 10px 25px;
     .add-list {
       margin-left: auto;
       &:hover {
@@ -36,6 +35,9 @@
     //   margin-bottom: 10px;
     // }
     button {
+      display: flex;
+      //justify-content: space-between;
+      align-items: center;
       padding: 15px 25px;
       width: 100%;
       box-sizing: border-box;
@@ -47,6 +49,16 @@
       &.active-link {
         background-color: transparentize($textColor, 0.7);
       }
+
+      .collection-count {
+        margin-left: auto;
+      }
     }
   }
+}
+
+.coding-icon-fav {
+  position: relative;
+  margin-left: -2px;
+  margin-right: 7px;
 }

@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -13,9 +7,11 @@ import {
 } from "@angular/forms";
 import { CollectionsService } from "../../services/collections.service";
 import { Observable, throwError } from "rxjs";
-import { tap, catchError, finalize } from "rxjs/operators";
+import { tap, catchError } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { ISnipCollection } from "../../graphql/model/collections";
+import { SnipsCollections } from "./models/snipscollectons";
+import { ToasterStyle } from "src/app/components/toaster/style";
+import { FavouritesInfo } from "./models/favourites-info";
 
 @Component({
   templateUrl: "./collections.component.html",
@@ -25,13 +21,16 @@ export class CollectionsComponent implements OnInit {
   @ViewChild("collectionNameInput")
   collectionNameInput?: ElementRef;
 
+  newCodeListForm: FormGroup;
   modalVisible = false;
   collectionAddError = false;
-  newCodeListForm: FormGroup;
-  allCollections$?: Observable<ISnipCollection[] | undefined>;
   createLoading = false;
   initLoading = false;
   initError = false;
+  allCollections$?: Observable<SnipsCollections>;
+  favourites$?: Observable<FavouritesInfo>;
+  readonly toasterStyle = ToasterStyle;
+  readonly collectionNameControl = new FormControl("", Validators.required);
 
   constructor(
     private router: Router,
@@ -39,7 +38,7 @@ export class CollectionsComponent implements OnInit {
     private collectionsService: CollectionsService
   ) {
     this.newCodeListForm = this.fb.group({
-      collectionName: new FormControl("", [Validators.required]),
+      collectionName: this.collectionNameControl,
     });
   }
 
@@ -49,8 +48,8 @@ export class CollectionsComponent implements OnInit {
       tap((res) => {
         this.initError = false;
         this.initLoading = false;
-        if (res[0]) {
-          this.router.navigate(["/collections", res[0]._id]);
+        if (res.snipsCollection[0]) {
+          this.router.navigate(["/collections", res.snipsCollection[0]._id]);
         }
       }),
       catchError((err) => {
@@ -59,6 +58,8 @@ export class CollectionsComponent implements OnInit {
         return throwError(err);
       })
     );
+
+    this.favourites$ = this.collectionsService.getFavouritesInfo();
   }
 
   showModal(): void {
@@ -84,10 +85,10 @@ export class CollectionsComponent implements OnInit {
   }
 
   saveNewCollection(): void {
-    const input = this.newCodeListForm.get("collectionName");
-    if (input) {
-      this.createLoading = true;
-      this.collectionsService.saveNewCollection(input.value).subscribe({
+    this.createLoading = true;
+    this.collectionsService
+      .saveNewCollection(this.collectionNameControl.value)
+      .subscribe({
         next: () => {
           this.createLoading = false;
           this.collectionAddError = false;
@@ -99,9 +100,6 @@ export class CollectionsComponent implements OnInit {
           this.collectionAddError = true;
         },
       });
-    } else {
-      throw new Error("codeListName not set");
-    }
   }
 
   abortNewCollection(): void {

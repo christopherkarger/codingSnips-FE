@@ -6,9 +6,9 @@ import {
   Validators,
 } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
-import { catchError, tap } from "rxjs/operators";
+import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { subscribe } from "graphql";
+import { ToasterStyle } from "src/app/components/toaster/style";
 
 @Component({
   templateUrl: "./login.component.html",
@@ -18,41 +18,46 @@ export class LoginComponent {
   formGroup: FormGroup;
   loading?: boolean;
   error?: boolean;
+  readonly toasterStyle = ToasterStyle;
+  readonly emailControl = new FormControl("", Validators.required);
+  readonly passwordControl = new FormControl("", Validators.required);
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
-    const emailInput = new FormControl("", [Validators.required]);
-    const passwordInput = new FormControl("", [Validators.required]);
     this.formGroup = this.fb.group({
-      email: emailInput,
-      password: passwordInput,
+      email: this.emailControl,
+      password: this.passwordControl,
     });
   }
   login() {
-    const email = this.formGroup.get("email");
-    const password = this.formGroup.get("password");
-
-    if (this.formGroup.invalid || !email || !password) {
-      // TODO: Handle Error Handling
+    if (
+      this.formGroup.invalid ||
+      !this.passwordControl.value ||
+      !this.emailControl.value
+    ) {
+      // TODO: Handle Form errors
       return;
     }
 
     this.loading = true;
-    this.authService.login(email.value, password.value).subscribe({
-      next: (res) => {
-        this.loading = false;
-        if (res.data) {
-          this.router.navigate(["collections"]);
-        }
-      },
-      error: (err) => {
-        this.loading = false;
-        this.error = true;
-        throw err;
-      },
-    });
+
+    this.authService
+      .login(this.emailControl.value, this.passwordControl.value)
+      .subscribe({
+        next: (res) => {
+          this.loading = false;
+          if (res.data) {
+            this.router.navigate(["collections"]);
+          }
+        },
+        error: (err) => {
+          this.loading = false;
+          this.error = true;
+          throw err;
+        },
+      });
   }
 }

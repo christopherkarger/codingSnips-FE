@@ -1,6 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./variables.scss";
 @import "./normalize.scss";
+@import "~highlight.js/styles/atom-one-dark.css";
+@import "~bootstrap/scss/bootstrap";
+
+.hljs-wrapper {
+  max-width: 100%;
+  border-radius: 10px;
+  position: relative;
+
+  &__inner {
+    width: 100%;
+    position: absolute;
+    overflow: auto;
+  }
+}
+
+.hljs {
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -30,6 +51,13 @@ button {
     border: 0;
   }
 
+  &.white {
+    color: #fff;
+    &:hover {
+      color: $textColor;
+    }
+  }
+
   &.highlight {
     background-color: $mainColor;
     color: #fff;
@@ -53,10 +81,6 @@ button {
 input {
   padding: 5px 8px;
   box-sizing: border-box;
-  &:focus {
-    border: 0;
-    outline: 0;
-  }
 }
 
 h1,
@@ -80,4 +104,112 @@ ul {
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.snip_tooltip {
+  .tooltip-inner {
+    background-color: $textColor;
+  }
+  &.bs-tooltip-top .arrow::before {
+    border-top-color: $textColor;
+  }
+
+  &.bs-tooltip-right .arrow::before {
+    border-right-color: $textColor;
+  }
+}
+.user-button {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  &:hover {
+    color: #fff;
+  }
+  i {
+    font-size: 38px;
+  }
+}
+
+.language-select {
+  cursor: pointer;
+  border: 1px solid $color2;
+  height: 40px;
+  box-sizing: border-box;
+  outline: none;
+  margin-left: 20px;
+  width: 200px;
+  padding: 0 3px;
+}
+
+.snippet-area {
+  width: 100%;
+  line-height: 1.6em;
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 300px;
+  margin-bottom: 20px;
+  border: 1px solid $color2;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.fav {
+  display: none;
+
+  & + label {
+    user-select: none;
+    margin-left: 20px;
+    cursor: pointer;
+    i {
+      position: relative;
+      top: 5px;
+    }
+    i:last-child {
+      display: none;
+    }
+  }
+
+  &:checked {
+    & + label {
+      i:first-child {
+        display: none;
+      }
+      i:last-child {
+        display: block;
+      }
+    }
+  }
+}
+
+input,
+select,
+textarea {
+  &:focus {
+    border: 0 !important;
+    box-shadow: 0 0 8px 0 rgb(28 143 202 / 75%);
+    outline: 0;
+  }
+}
+
+.mbt-10 {
+  margin-top: 10px;
+}
+
+.mbb-10 {
+  margin-bottom: 10px;
+}
+
+.mbt-20 {
+  margin-top: 20px;
+}
+
+.mbb-20 {
+  margin-bottom: 20px;
 }

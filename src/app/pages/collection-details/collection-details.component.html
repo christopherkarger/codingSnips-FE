@@ -34,20 +34,32 @@
     >
       <h1>Add new Snippet</h1>
       <form [formGroup]="addSnipForm">
-        <input
-          class="code-modal__text"
-          type="text"
-          formControlName="snipTitle"
-          placeholder="Title"
-          #snipNameInput
-        />
+        <div class="flex">
+          <input
+            class="code-modal__text"
+            type="text"
+            formControlName="snipTitle"
+            placeholder="Title"
+            #snipNameInput
+          />
+          <select class="language-select" formControlName="snipLanguage">
+            <option disabled value>Sprache</option>
+            <option *ngFor="let option of codeLanguages" [value]="option">
+              {{ option }}
+            </option>
+          </select>
+          <input id="fav" class="fav" type="checkbox" formControlName="snipFavourite" />
+          <label for="fav">
+            <i class="material-icons">star_border</i>
+            <i class="material-icons">star</i>
+          </label>
+        </div>
 
-        <input
-          class="code-modal__text"
-          type="text"
+        <textarea
+          class="snippet-area"
           formControlName="snipText"
-          placeholder="Text"
-        />
+          placeholder="Put your Code Snippet in here..."
+        ></textarea>
 
         <div class="code-modal__button-actions">
           <button class="highlight" type="button" (click)="addSnip(collection)">
@@ -125,11 +137,13 @@
 </div>
 
 <toaster
+  [styling]="toasterStyle.Error"
   [(visible)]="snipAddError"
   msg="Could not add Snip! Please try again later."
 ></toaster>
 
 <toaster
+  [styling]="toasterStyle.Error"
   [(visible)]="collectionUpdateError"
   msg="Could not save your changes! Please try again later."
 ></toaster>

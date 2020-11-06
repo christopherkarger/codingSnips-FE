@@ -35,7 +35,7 @@ export class GraphQlService {
   mutate<T, R>(
     mutation: DocumentNode,
     variables: any
-  ): Observable<FetchResult> {
+  ): Observable<FetchResult<T>> {
     return this.apollo
       .mutate<T>({
         mutation,
@@ -70,5 +70,9 @@ export class GraphQlService {
     if (error.message.indexOf("Authentication failed") > -1) {
       this.logoutService.logout();
     }
+  }
+
+  clearCache(): void {
+    this.apollo.getClient().cache.reset()
   }
 }
